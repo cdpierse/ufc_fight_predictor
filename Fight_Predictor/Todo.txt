@@ -1,0 +1,3 @@
+TODO:
+ - Feature engineering: Create some new features from raw data w/l ratio in last 5 fights. Create an age at fight variable. Should be able to alter W/L/D/NC columns to be correct to each bout
+ - Figure out methodolgy for predicting a veccondator of actual fight stats i.e. What might Khabibs' stats against Fergueson be in a real fight (if it ever happened) and vice versa
