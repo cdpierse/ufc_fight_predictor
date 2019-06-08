@@ -36,12 +36,11 @@ scores = model.evaluate(x_test,y_test)
 results = model.predict(x_test)
 time = str(datetime.datetime.now().date())
 model.save('Saved_Models/Fight_Stats_Models/stats_model'+time+'.h5')
-#results = [np.round(x) for x in results]
 
-predictor_cols = ['pass_stat_f1', 'pass_stat_f2', 'str_stat_f1', 'str_stat_f2',
-       'sub_stat_f1', 'sub_stat_f2', 'td_stat_f1', 'td_stat_f2']
-for i in range(0,5):
-    rand_i = np.random.randint(0,300)
-    for prediction, actual, col in zip(results[rand_i], y_test[rand_i], predictor_cols):
-        print(f'{col}: Prediction= {prediction} Actual = {actual}')
+# predictor_cols = ['pass_stat_f1', 'pass_stat_f2', 'str_stat_f1', 'str_stat_f2',
+#        'sub_stat_f1', 'sub_stat_f2', 'td_stat_f1', 't d_stat_f2']
+# for i in range(0,5):
+#     rand_i = np.random.randint(0,300)
+#     for prediction, actual, col in zip(results[rand_i], y_test[rand_i], predictor_cols):
+#         print(f'{col}: Prediction= {prediction} Actual = {actual}')
 

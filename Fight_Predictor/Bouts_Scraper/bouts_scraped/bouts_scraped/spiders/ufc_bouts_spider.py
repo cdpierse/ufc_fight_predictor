@@ -1,6 +1,8 @@
 import scrapy
 from scrapy import Selector
-from ..items import BoutsScrapedItem
+from Fight_Predictor.Bouts_Scraper.bouts_scraped.bouts_scraped.items import BoutsScrapedItem
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 
 class UFC_Bouts(scrapy.Spider):
     name = "BoutsSpider" # we use this name to run 'scrapy crawl <name>' in terminal
@@ -50,6 +52,9 @@ class UFC_Bouts(scrapy.Spider):
 
             yield bout_item
 
+process = CrawlerProcess(get_project_settings())
+process.crawl(UFC_Bouts)
+process.start()
 
 
 

@@ -1,9 +1,9 @@
 import scrapy
 import string
 from scrapy import Selector
-from ..items import FighterScraperItem
-
-
+from Fight_Predictor.Fights_scraper.items import FighterScraperItem
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
 class UFC_Fighter(scrapy.Spider):
     name = "FighterSpider" # we use this name to run 'scrapy crawl <name>' in terminal
 
@@ -56,9 +56,11 @@ class UFC_Fighter(scrapy.Spider):
             fighter_item['sub_avg']= float(item.xpath('li[5]//text()').extract()[2])
 
         yield fighter_item
-
-
-
+#
+process = CrawlerProcess(get_project_settings())
+process.crawl(UFC_Fighter)
+process.start()
+#
 
 
 
