@@ -2,15 +2,17 @@ import pandas as pd
 import numpy as np
 import os 
 import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from sklearn.impute import SimpleImputer
 import math
 import re
+import sys
+
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.impute import SimpleImputer
 from sklearn.model_selection import StratifiedShuffleSplit
-import sys
 from pandas.api.types import CategoricalDtype
+from sklearn.model_selection import train_test_split
 
 pd.set_option('mode.chained_assignment', None)
 
@@ -20,24 +22,31 @@ class FightDataPreprocessor:
     y_train = None
     X_test = None 
     y_test = None
-    rand_winner_index =[]
-    weight_classes_ordered = ["Women's Strawweight","Women's Flyweight","Women's Bantamweight",
-               "Women's Featherweight", "Flyweight", "Bantamweight", "Featherweight",
-               "Lightweight","Welterweight", "Middleweight","Light Heavyweight",
-               "Heavyweight", "Super Heavyweight", "Open Weight","Catch Weight"]
+    scaler = None                    
     data_dir_name = None
 
+    rand_winner_index = []
 
-    def data_pipeline_winner(self):
+    weight_classes_ordered = [
+                            "Women's Strawweight","Women's Flyweight","Women's Bantamweight",
+                            "Women's Featherweight", "Flyweight", "Bantamweight", "Featherweight",
+                            "Lightweight","Welterweight", "Middleweight","Light Heavyweight",
+                            "Heavyweight", "Super Heavyweight", "Open Weight","Catch Weight"
+                            ]
+
+    fight_stats_targets = [
+                            'pass_stat_f1', 'pass_stat_f2', 'str_stat_f1', 'str_stat_f2',
+                           'sub_stat_f1', 'sub_stat_f2', 'td_stat_f1', 'td_stat_f2'
+                        ]
+    
+
+    def data_pipeline_generic(self):
 
         print('Starting data preprocessing pipeline...')
-
-        self.data_dir_name = 'winner_prediction_data'
 
         fightbouts = self.get_fighter_bouts()
         fightbouts = self.drop_unused_columns(fightbouts)
 
-        self.random_shuffle_winner_index(fightbouts)
         fightbouts = self.shuffle_winner_positions(fightbouts)
 
         fighter1_columns = self.get_column_names('f1',fightbouts)
@@ -47,9 +56,11 @@ class FightDataPreprocessor:
         fighter2_col_index = self.get_column_index(fightbouts,fighter2_columns)
 
         fightbouts_copy = fightbouts.copy()
+        
         fightbouts = self.rearrange_data_to_col_index(fightbouts,
                                         fighter1_col_index,
                                         fighter2_col_index)
+
         fightbouts = self.rearrange_data_to_col_index(fightbouts,
                                         fighter1_col_index,
                                         fighter2_col_index,
@@ -59,26 +70,57 @@ class FightDataPreprocessor:
 
         fightbouts = self.join_dataframes(categorical_fbout,self.remove_catergorical_columns(fightbouts))
 
+        return fightbouts
+
+    def data_pipeline_fighter_stats_prediction(self):
+        
+        self.data_dir_name = 'fighter_stats_prediction_data'
+
+        fightbouts = self.data_pipeline_generic()
+
+        targets = fightbouts[self.fight_stats_targets]
+
+        fightbouts = fightbouts.drop(columns = targets.columns)
+
+        #for now we are not including the below 
+        #fightbouts = self.standard_scale_dataframe(fightbouts)
+        
+        fightbouts = self.standard_scale_dataframe(fightbouts)
+        fightbouts = self.impute_dataframe(fightbouts)
+
+        self.train_test_split_regular(fightbouts,targets)
+
+        self.train_test_to_csv(self.X_train,'X_train')
+        self.train_test_to_csv(self.y_train,'y_train')
+        self.train_test_to_csv(self.X_test,'X_test')
+        self.train_test_to_csv(self.y_test,'y_test')  
+
+        print('Completed data preprocessing pipeline for fight statistics prediction...')
+
+
+    def data_pipeline_winner_prediction(self):
+
+        self.data_dir_name = 'winner_prediction_data'
+
+        fightbouts = self.data_pipeline_generic()
+
         target = self.get_winners_target(fightbouts)
         
         fightbouts = fightbouts.drop(columns =["winner"])
-
-        #this will be the copy to bring in for second model
       
         fightbouts = self.standard_scale_dataframe(fightbouts)
         fightbouts  = self.impute_dataframe(fightbouts)
 
         self.strata_shuffle_data(fightbouts,target)
 
-        print('Completed datapreprocessing pipeline...')
-
-
         self.train_test_to_csv(self.X_train,'X_train')
         self.train_test_to_csv(self.y_train,'y_train')
         self.train_test_to_csv(self.X_test,'X_test')
         self.train_test_to_csv(self.y_test,'y_test')
 
-    
+        print('Completed data preprocessing pipeline for winner prediction...')
+
+
     def categorical_data_pipeline(self,fight_bout_data):
 
         categorical_fbout = self.create_categorical_dataframe(fight_bout_data)
@@ -97,9 +139,11 @@ class FightDataPreprocessor:
         categorical_fbout = self.calculate_age_at_fight(categorical_fbout,'f2')
 
         categorical_fbout = self.parse_fighter_record(categorical_fbout)
+
+        lambda_fn = lambda x: self.parse_fighter_height(x)
         
-        categorical_fbout['f1_height'] = categorical_fbout['f1_height'].apply(lambda x: self.parse_fighter_height(x))
-        categorical_fbout['f2_height'] = categorical_fbout['f2_height'].apply(lambda x: self.parse_fighter_height(x))
+        categorical_fbout['f1_height'] = categorical_fbout['f1_height'].apply(lambda_fn)
+        categorical_fbout['f2_height'] = categorical_fbout['f2_height'].apply(lambda_fn)
 
         categorical_fbout = self.one_hot_encode(categorical_fbout)
 
@@ -145,11 +189,13 @@ class FightDataPreprocessor:
         self.rand_winner_index = np.random.choice(len(fight_bout_data),
                                   size= math.ceil(len(fight_bout_data)/2),
                                   replace = False)
-        return self.rand_winner_index
     
     def shuffle_winner_positions(self,fight_bout_data):
+        self.random_shuffle_winner_index(fight_bout_data)
+
         f1_index = fight_bout_data.columns.get_loc('figher1')
         f2_index = fight_bout_data.columns.get_loc('fighter2')
+
         fight_bout_data.iloc[self.rand_winner_index,[f1_index,f2_index]] = fight_bout_data.iloc[self.rand_winner_index,[f2_index,f1_index]].values
         fight_bout_data['winner'].iloc[self.rand_winner_index] = fight_bout_data['fighter2'].iloc[self.rand_winner_index]
 
@@ -201,9 +247,6 @@ class FightDataPreprocessor:
         categorical_data["weight_class"] = categorical_data.weight_class.astype(
             CategoricalDtype(categories=self.weight_classes_ordered,ordered= True)).cat.codes
 
-        # categorical_data["weight_class"] = categorical_data.weight_class.astype("category",
-        #                          ordered=True,
-        #                          categories= self.weight_classes_ordered).cat.codes
         return categorical_data 
     
     def calculate_age_at_fight(self,categorical_data,fighter_prefix):
@@ -211,16 +254,24 @@ class FightDataPreprocessor:
         return categorical_data 
     
     def parse_fighter_record(self,categorical_data):
+
         categorical_data = categorical_data.replace('Record: ',"",regex=True)
         
         categorical_data['f1_win'],categorical_data['f1_loss'],categorical_data['f1_draw'],categorical_data['f1_nc'] = 0,0,0,0
         categorical_data['f2_win'],categorical_data['f2_loss'],categorical_data['f2_draw'],categorical_data['f2_nc'] = 0,0,0,0
 
-        categorical_data['f1_win'],categorical_data['f1_loss'],categorical_data['f1_draw'],categorical_data['f1_nc'] = zip(*categorical_data.apply(lambda x: self.split_record(x['f1_record']), axis=1))
-        categorical_data['f2_win'],categorical_data['f2_loss'],categorical_data['f2_draw'],categorical_data['f2_nc'] = zip(*categorical_data.apply(lambda x: self.split_record(x['f2_record']), axis=1))
+        categorical_data['f1_win'],categorical_data['f1_loss'],categorical_data['f1_draw'],categorical_data['f1_nc'] = \
+             self.apply_split_record(categorical_data,'f1_record')
+
+        categorical_data['f2_win'],categorical_data['f2_loss'],categorical_data['f2_draw'],categorical_data['f2_nc'] = \
+            self.apply_split_record(categorical_data,'f2_record')
         
         categorical_data =  categorical_data.drop(columns =['f1_record','f2_record'])
+
         return categorical_data
+    
+    def apply_split_record(self,categorical_data,fighter_record_name):
+        return zip(*categorical_data.apply(lambda x: self.split_record(x[fighter_record_name]), axis=1))
 
     def split_record(self,row):
 
@@ -277,18 +328,21 @@ class FightDataPreprocessor:
 
     
     def standard_scale_dataframe(self,fight_bout_data):
-        scaler = StandardScaler()
+        fight_bout_data = fight_bout_data.apply(pd.to_numeric)
+        #fight_bout_data = pd.to_numeric(fight_bout_data,downcast='float')
+        scaler = RobustScaler()
         scaled_data = scaler.fit_transform(fight_bout_data)
+        self.scaler = scaler
 
         return scaled_data
     
     def impute_dataframe(self,fight_bout_data):
-        imputer = SimpleImputer(strategy= 'median',copy= False)
+        imputer = SimpleImputer(strategy= 'most_frequent',copy= False)
         imputed_data = imputer.fit_transform(fight_bout_data)
         return imputed_data
     
     def strata_shuffle_data(self,fight_bout_data,target):
-        sss= StratifiedShuffleSplit(n_splits=20,test_size=0.2,random_state=42)
+        sss= StratifiedShuffleSplit(n_splits=20,test_size=0.1,random_state=42)
 
         for train_index, test_index in sss.split(fight_bout_data, target):
             X_train, X_test = fight_bout_data[train_index], fight_bout_data[test_index]
@@ -296,6 +350,11 @@ class FightDataPreprocessor:
         
         self.X_train, self.y_train = X_train, y_train.values
         self.X_test, self.y_test = X_test, y_test.values
+    
+    def train_test_split_regular(self,fight_bout_data,targets):
+
+        self.X_train,self.X_test,self.y_train,self.y_test = \
+             train_test_split(fight_bout_data,targets.values, test_size=0.10, random_state=42)
 
 
     def train_test_to_csv(self,file,filename):
@@ -303,7 +362,6 @@ class FightDataPreprocessor:
         dirName = os.path.join('Fight_Predictor/model_data',self.data_dir_name)
         file_location = os.path.join(dirName, filename+".csv")
 
-    
         try:
             os.mkdir(dirName)
             print("Directory " , dirName ,  " Created ")
@@ -314,5 +372,8 @@ class FightDataPreprocessor:
        
 
 fdp = FightDataPreprocessor()
-fdp.data_pipeline_winner()
-#fdp.main_data_pipeline()
+fdp.data_pipeline_winner_prediction()
+fdp.data_pipeline_fighter_stats_prediction()
+# scaler = fdp.scaler
+# print(fdp.y_test)
+#print(scaler.inverse_transform(fdp.y_test))
