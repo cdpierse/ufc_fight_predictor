@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="cd045a33-7325-4aa9-9c14-70ac912540f4" name="Default Changelist" comment="">
+    <list default="true" id="cd045a33-7325-4aa9-9c14-70ac912540f4" name="Default Changelist" comment="moved gitignore">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Fight_Predictor/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Fight_Predictor/Fights_scraper/spiders/scraped_fighters.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Fight_Predictor/Fights_scraper/spiders/scraped_fighters.csv" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,11 +20,11 @@
           <entry key="project.open.time.1" value="2" />
           <entry key="project.open.time.3" value="1" />
           <entry key="project.open.time.4" value="2" />
-          <entry key="project.open.time.5" value="2" />
+          <entry key="project.open.time.5" value="3" />
           <entry key="project.open.time.6" value="1" />
           <entry key="project.open.time.7" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="10" />
+          <entry key="project.opened" value="11" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -50,12 +51,12 @@
           <entry key="Python Console" value="230" />
           <entry key="dummy" value="23" />
           <entry key="py" value="10168" />
-          <entry key="txt" value="517" />
+          <entry key="txt" value="559" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="540" />
+          <entry key="PLAIN_TEXT" value="582" />
           <entry key="Python" value="10398" />
         </counts>
       </usages-collector>
@@ -66,8 +67,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Fight_Predictor/Code_Clean/preprocess_data.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="388">
-              <caret line="235" column="61" lean-forward="true" selection-start-line="235" selection-start-column="61" selection-end-line="235" selection-end-column="61" />
+            <state relative-caret-position="2624">
+              <caret line="286" column="61" selection-start-line="286" selection-start-column="61" selection-end-line="286" selection-end-column="61" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -137,18 +138,6 @@
               <item name="UFC_Fight_Predictor" type="462c0819:PsiDirectoryNode" />
               <item name="Fight_Predictor" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="UFC_Fight_Predictor" type="b2602c69:ProjectViewProjectNode" />
-              <item name="UFC_Fight_Predictor" type="462c0819:PsiDirectoryNode" />
-              <item name="Fight_Predictor" type="462c0819:PsiDirectoryNode" />
-              <item name="Code_Clean" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="UFC_Fight_Predictor" type="b2602c69:ProjectViewProjectNode" />
-              <item name="UFC_Fight_Predictor" type="462c0819:PsiDirectoryNode" />
-              <item name="Fight_Predictor" type="462c0819:PsiDirectoryNode" />
-              <item name="model_data" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
@@ -161,6 +150,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$" />
       <recent name="$PROJECT_DIR$/Fight_Predictor" />
     </key>
   </component>
@@ -352,7 +342,28 @@
       <option name="project" value="LOCAL" />
       <updated>1560029371131</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Rewrote preprocessing notebook as preprocess_data.py a class with discrete functions to handle the fighter and bout preprocessing for both models.">
+      <created>1560620669265</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1560620669265</updated>
+    </task>
+    <task id="LOCAL-00005" summary="model tweaks and cleanup">
+      <created>1560620736412</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1560620736412</updated>
+    </task>
+    <task id="LOCAL-00006" summary="moved gitignore">
+      <created>1560620841795</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1560620841795</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TodoView">
@@ -393,7 +404,9 @@
     <MESSAGE value="removed train and test files that now have their own directory" />
     <MESSAGE value="Have built a multioutput regression model in keras for predicting a fighters performance in a given bout. Model is saved within the Saved_models folder." />
     <MESSAGE value="Rewrote preprocessing notebook as preprocess_data.py a class with discrete functions to handle the fighter and bout preprocessing for both models." />
-    <option name="LAST_COMMIT_MESSAGE" value="Rewrote preprocessing notebook as preprocess_data.py a class with discrete functions to handle the fighter and bout preprocessing for both models." />
+    <MESSAGE value="model tweaks and cleanup" />
+    <MESSAGE value="moved gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved gitignore" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Scraper/fs_scrape.py" />
@@ -406,29 +419,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/events-events.html" />
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/sklearn/datasets/data/wine_data.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="45">
           <caret line="3" column="42" selection-start-line="3" selection-start-column="42" selection-end-line="3" selection-end-column="42" />
         </state>
       </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
+      </provider>
     </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/sklearn/datasets/data/iris.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
       </provider>
-      <provider selected="true" editor-type-id="csv-text-editor" />
     </entry>
     <entry file="file:///Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/sklearn/datasets/data/boston_house_prices.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="230">
           <caret line="10" column="61" selection-start-line="10" selection-start-column="61" selection-end-line="10" selection-end-column="61" />
         </state>
+      </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/__init__.py">
@@ -436,13 +449,13 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/ufc_fighter_spider.py" />
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/scraped_bouts.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="366">
           <caret line="3561" column="83" selection-start-line="3561" selection-start-column="83" selection-end-line="3561" selection-end-column="83" />
         </state>
+      </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Bouts_Scraper/bouts_scraped/scrapy.cfg">
@@ -489,13 +502,13 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/pima-indians-diabetes.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="-8358">
           <caret line="385" column="30" selection-start-line="385" selection-start-column="30" selection-end-line="385" selection-end-column="30" />
         </state>
+      </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/y_test.csv" />
@@ -510,38 +523,38 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/X_test_stats.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="-628">
           <caret line="3" column="25" selection-start-line="3" selection-start-column="25" selection-end-line="3" selection-end-column="25" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/X_test.csv">
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/X_test.csv">
       <provider selected="true" editor-type-id="csv-text-editor" />
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/X_train_stats.csv">
       <provider selected="true" editor-type-id="csv-text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/y_test_stats.csv">
-      <provider editor-type-id="csv-table-editor">
-        <state showInfoPanel="true" rowLines="3" />
-      </provider>
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="-123" />
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/y_test.csv">
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Fight_Predictor/model_data/y_test.csv">
       <provider selected="true" editor-type-id="csv-text-editor">
         <state relative-caret-position="-4881" />
+      </provider>
+      <provider editor-type-id="csv-table-editor">
+        <state showInfoPanel="true" rowLines="3" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Todo.txt">
@@ -555,9 +568,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="920">
           <caret line="40" column="56" selection-start-line="40" selection-start-column="56" selection-end-line="40" selection-end-column="56" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -565,19 +575,21 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="621">
           <caret line="27" column="39" lean-forward="true" selection-start-line="27" selection-start-column="39" selection-end-line="27" selection-end-column="39" />
-          <folding>
-            <element signature="e#0#23#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/fighters_bouts_joined.csv">
+      <provider selected="true" editor-type-id="csv-text-editor" />
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3" />
       </provider>
-      <provider selected="true" editor-type-id="csv-text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Fights_scraper/spiders/scraped_fighters.csv">
+      <provider selected="true" editor-type-id="csv-text-editor">
+        <state relative-caret-position="23">
+          <caret line="212" column="9" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
+        </state>
+      </provider>
       <provider editor-type-id="csv-table-editor">
         <state showInfoPanel="true" rowLines="3">
           <column index="0" width="100" />
@@ -597,20 +609,11 @@
           <column index="14" width="100" />
         </state>
       </provider>
-      <provider selected="true" editor-type-id="csv-text-editor">
-        <state relative-caret-position="23">
-          <caret line="212" column="9" selection-start-line="212" selection-start-column="9" selection-end-line="212" selection-end-column="9" />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/ufc_bouts_spider.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1518">
           <caret line="66" lean-forward="true" selection-start-line="66" selection-end-line="66" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-            <marker date="1558809761976" expanded="true" signature="263:268" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -618,9 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="703">
           <caret line="59" selection-start-line="59" selection-end-line="61" selection-end-column="15" />
-          <folding>
-            <element signature="e#0#13#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -650,8 +650,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Fight_Predictor/Code_Clean/preprocess_data.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="388">
-          <caret line="235" column="61" lean-forward="true" selection-start-line="235" selection-start-column="61" selection-end-line="235" selection-end-column="61" />
+        <state relative-caret-position="2624">
+          <caret line="286" column="61" selection-start-line="286" selection-start-column="61" selection-end-line="286" selection-end-column="61" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
