@@ -177,6 +177,7 @@ class FightDataPreprocessor:
         return fighter_bouts
 
     def drop_unused_columns(self,fight_bout_data):
+
     
         columns = ['round','time','win_method_finish','win_method_type','event_attendence']
         try:
