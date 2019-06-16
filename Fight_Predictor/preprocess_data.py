@@ -20,6 +20,7 @@ class FightDataPreprocessor:
     y_test = None
     scaler = None                    
     data_dir_name = None
+    feature_names = None 
 
     rand_winner_index = []
 
@@ -104,6 +105,7 @@ class FightDataPreprocessor:
         
         fightbouts = fightbouts.drop(columns =["winner"])
       
+        self.feature_names = fightbouts.columns.values
         fightbouts = self.standard_scale_dataframe(fightbouts)
         fightbouts  = self.impute_dataframe(fightbouts)
 
@@ -368,9 +370,9 @@ class FightDataPreprocessor:
             np.savetxt(file_location,file,delimiter= ',')
        
 
-fdp = FightDataPreprocessor()
-fdp.data_pipeline_winner_prediction()
-fdp.data_pipeline_fighter_stats_prediction()
+# fdp = FightDataPreprocessor()
+# fdp.data_pipeline_winner_prediction()
+# fdp.data_pipeline_fighter_stats_prediction()
 # scaler = fdp.scaler
 # print(fdp.y_test)
 #print(scaler.inverse_transform(fdp.y_test))
