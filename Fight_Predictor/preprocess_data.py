@@ -10,7 +10,7 @@ from pandas.api.types import CategoricalDtype
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
 from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
-
+from sklearn.externals import joblib
 pd.set_option('mode.chained_assignment', None)
 
 class FightDataPreprocessor:
@@ -18,11 +18,11 @@ class FightDataPreprocessor:
     y_train = None
     X_test = None 
     y_test = None
-    scaler = None                    
     data_dir_name = None
     feature_names = None 
 
     rand_winner_index = []
+    
 
     weight_classes_ordered = [
                             "Women's Strawweight","Women's Flyweight","Women's Bantamweight",
@@ -106,6 +106,8 @@ class FightDataPreprocessor:
         fightbouts = fightbouts.drop(columns =["winner"])
       
         self.feature_names = fightbouts.columns.values
+        self.original_values = fightbouts.as_matrix()
+        self.original_values = self.impute_dataframe(self.original_values)
         fightbouts = self.standard_scale_dataframe(fightbouts)
         fightbouts  = self.impute_dataframe(fightbouts)
 
@@ -330,8 +332,9 @@ class FightDataPreprocessor:
         fight_bout_data = fight_bout_data.apply(pd.to_numeric)
         #fight_bout_data = pd.to_numeric(fight_bout_data,downcast='float')
         scaler = RobustScaler()
-        scaled_data = scaler.fit_transform(fight_bout_data)
-        self.scaler = scaler
+        scaler.fit(fight_bout_data)
+        scaled_data = scaler.transform(fight_bout_data)
+        self.save_scaler(scaler)
 
         return scaled_data
     
@@ -340,6 +343,9 @@ class FightDataPreprocessor:
         imputed_data = imputer.fit_transform(fight_bout_data)
         return imputed_data
     
+    def save_scaler(self,scaler):
+        joblib.dump(scaler,'my_scaler.pkl')
+
     def strata_shuffle_data(self,fight_bout_data,target):
         sss= StratifiedShuffleSplit(n_splits=20,test_size=0.1,random_state=42)
 

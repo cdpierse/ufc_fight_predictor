@@ -1,9 +1,13 @@
+import matplotlib.pyplot as plt
 import shap
 import tensorflow as tf
+import numpy as np
 from tensorflow import keras
-from utils import r2,get_train_test_data
-from preprocess_data import FightDataPreprocessor 
-import matplotlib.pyplot as plt
+
+from preprocess_data import FightDataPreprocessor
+from utils import get_train_test_data, r2
+from sklearn.externals import joblib
+
 filepath ='Fight_Predictor/Saved_Models/Winner_Prediction_Models/bout_winner.h5'
 model = keras.models.load_model(filepath)
 
@@ -11,19 +15,29 @@ model = keras.models.load_model(filepath)
 fdp = FightDataPreprocessor()
 fdp.data_pipeline_winner_prediction()
 feature_names = fdp.feature_names
+features = fdp.original_values
 x_train, y_train, x_test, y_test = get_train_test_data('winner_prediction_data')
+scaler = joblib.load('my_scaler.pkl')
 
 
 explainer = shap.DeepExplainer(model,x_train)
 
 shap_values = explainer.shap_values(x_test[:10])
 
+feature_values = x_test[0].reshape(1,-1)
+feature_values = scaler.inverse_transform(feature_values)
+
 #shap.summary_plot(shap_values,feature_names=feature_names)
 plot = shap.force_plot(
-    explainer.expected_value[1],
-    shap_values[0][0],x_test[1],
-    feature_names= feature_names,
+    explainer.expected_value[0],
+    shap_values[0][0],feature_values,
+    feature_names= feature_names, 
     )
-shap.save_html('explainer.html',plot)
 
-print('completetd')
+print(y_test[0])
+shap.save_html('explainer.html',plot)
+shap.summary_plot(shap_values,features=x_train,feature_names= feature_names,plot_type= 'dot')
+
+
+
+print('completed')
