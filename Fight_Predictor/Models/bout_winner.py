@@ -1,9 +1,15 @@
-#rename this file to predict_bout_winner
+import sys
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor')
 import numpy as np
 import tensorflow as tf
 
 from tensorflow.keras.layers import Dense, Dropout
-from utils import random_data_shuffle,get_train_test_data
+from utils import random_data_shuffle, get_train_test_data
+#from Fight_Predictor.utils import random_data_shuffle, get_train_test_data
+
+#from utils import random_data_shuffle,get_train_test_data
+#from utils import random_data_shuffle,get_train_test_data
+#from utils import random_data_shuffle,get_train_test_data
 
 
 np.random.seed(7)

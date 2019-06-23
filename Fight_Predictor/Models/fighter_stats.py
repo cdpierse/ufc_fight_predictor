@@ -1,4 +1,7 @@
-#rename this file to predict_fighter_stats
+
+import sys
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor')
+
 import datetime
 import sys
 
@@ -7,7 +10,8 @@ import tensorflow as tf
 import tensorflow._api.v1.keras.backend as K
 from tensorflow.keras.layers import Dense, Dropout
 from tensorflow.keras.regularizers import l2
-from utils import r2,random_data_shuffle, get_train_test_data
+
+from Fight_Predictor.utils import r2,random_data_shuffle, get_train_test_data
 
 
 x_train,y_train,x_test,y_test = get_train_test_data('fighter_stats_prediction_data')

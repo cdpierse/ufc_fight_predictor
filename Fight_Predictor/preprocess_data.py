@@ -42,6 +42,7 @@ class FightDataPreprocessor:
         print('Starting data preprocessing pipeline...')
 
         fightbouts = self.get_fighter_bouts()
+
         fightbouts = self.drop_unused_columns(fightbouts)
 
         fightbouts = self.shuffle_winner_positions(fightbouts)
@@ -80,10 +81,9 @@ class FightDataPreprocessor:
         fightbouts = fightbouts.drop(columns = targets.columns)
 
         #for now we are not including the below 
-        #fightbouts = self.standard_scale_dataframe(fightbouts)
-        
-        fightbouts = self.standard_scale_dataframe(fightbouts)
+
         fightbouts = self.impute_dataframe(fightbouts)
+        fightbouts = self.standard_scale_dataframe(fightbouts)
 
         self.train_test_split_regular(fightbouts,targets)
 
@@ -105,11 +105,13 @@ class FightDataPreprocessor:
         
         fightbouts = fightbouts.drop(columns =["winner"])
       
-        self.feature_names = fightbouts.columns.values
-        self.original_values = fightbouts.as_matrix()
-        self.original_values = self.impute_dataframe(self.original_values)
-        fightbouts = self.standard_scale_dataframe(fightbouts)
+     
+
         fightbouts  = self.impute_dataframe(fightbouts)
+
+        self.original_values = fightbouts.as_matrix()
+
+        fightbouts = self.standard_scale_dataframe(fightbouts)
 
         self.strata_shuffle_data(fightbouts,target)
 
@@ -119,7 +121,6 @@ class FightDataPreprocessor:
         self.train_test_to_csv(self.y_test,'y_test')
 
         print('Completed data preprocessing pipeline for winner prediction...')
-
 
     def categorical_data_pipeline(self,fight_bout_data):
 
@@ -156,24 +157,36 @@ class FightDataPreprocessor:
 
 
     def get_fighters(self):
+        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Fights_scraper','spiders')
+       
         try:
-            fighters = pd.read_csv('Fights_scraper/spiders/scraped_fighters.csv')
-        except IOError:
+            print(os.getcwd())
+            print(os.path.join(filedir,'scraped_fighters.csv'))
+            fighters = pd.read_csv(os.path.join(filedir,'scraped_fighters.csv'))
+        except FileNotFoundError:
             sys.exit('Unable to read Fighters file from disk. Exiting.')
         return fighters
 
     def get_bouts(self):
+        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Bouts_scraper',
+                                            'bouts_scraped','bouts_scraped',
+                                            'spiders')
+
         try:
-            bouts = pd.read_csv('Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/scraped_bouts.csv')
-        except:
+            bouts = pd.read_csv(os.path.join(filedir,'scraped_bouts.csv'))
+            #bouts = pd.read_csv('Bouts_Scraper/bouts_scraped/bouts_scraped/spiders/scraped_bouts.csv')
+        except FileNotFoundError:
             sys.exit('Unable to read Bouts file from disk. Exiting.')
         return bouts
 
     def get_fighter_bouts(self):
         try:
             fighter_bouts =  pd.read_csv('Fight_Predictor/fighters_bouts_joined.csv')
-        except:
+        except FileNotFoundError:
             sys.exit('Unable to read Fighter Bouts Joined from disk. Exiting.')
+        
+        self.feature_names = fighter_bouts.columns.values
+
         return fighter_bouts
 
     def drop_unused_columns(self,fight_bout_data):
@@ -339,12 +352,16 @@ class FightDataPreprocessor:
         return scaled_data
     
     def impute_dataframe(self,fight_bout_data):
+        columns = fight_bout_data.columns
         imputer = SimpleImputer(strategy= 'most_frequent',copy= False)
         imputed_data = imputer.fit_transform(fight_bout_data)
-        return imputed_data
+
+        fight_bouts_imputed = pd.DataFrame(imputed_data, columns=columns)
+        return fight_bouts_imputed
     
     def save_scaler(self,scaler):
-        joblib.dump(scaler,'my_scaler.pkl')
+        file_dir = os.path.join(os.getcwd(),'Fight_Predictor')
+        joblib.dump(scaler,os.path.join(file_dir,'my_scaler.pkl'))
 
     def strata_shuffle_data(self,fight_bout_data,target):
         sss= StratifiedShuffleSplit(n_splits=20,test_size=0.1,random_state=42)
