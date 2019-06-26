@@ -5,14 +5,18 @@ import pandas  as pd
 class RetrieveFighters(FightDataPreprocessor):
     
     def __init__(self):
-        fdp = FightDataPreprocessor()
-        self.fighters = fdp.get_fighters()
-
-        fdp.get_fighter_bouts()
-        self.feature_names = fdp.feature_names
-        self.prediction_df = pd.DataFrame(columns=self.feature_names)
+        self.fdp = FightDataPreprocessor()
+        self.fighters = self.fdp.get_fighters()
 
 
+        self.fdp.get_fighter_bouts()
+
+        with open('fight_stats_feature_names.txt') as f:
+            content = f.readlines()
+        
+        self.feature_names = [x.strip() for x in content]
+        self.prediction_df = pd.DataFrame(columns=self.feature_names) == 0
+  
     def get_fighter_details(self,fighter_name):
         return self.fighters[self.fighters.fighter_name == fighter_name]
     
@@ -24,11 +28,10 @@ class RetrieveFighters(FightDataPreprocessor):
         """
         pass
 
-    def create_fighter_df(self,fighter):
-        prefix = 'f1'
-
+    def populate_fighter_df(self,fighter,prefix):
+        self.prediction_df.fighter1 = 0
+        self.prediction_df.fighter2 = 1
         df_structure = {'date_of_birth': prefix +'_dob',
-                        'fighter_name':'fighter1',
                         'fighter_record':prefix +'_record',
                         'height': prefix +'_height',
                         'reach': prefix +'_reach',
@@ -46,18 +49,18 @@ class RetrieveFighters(FightDataPreprocessor):
             
         for key,value in df_structure.items():
             self.prediction_df[value] = fighter[key].values
-        
-        print(self.prediction_df.iloc[0])
-            
-        
-   
 
-       
-    
-
+    def process_fight(self):
+        self.fdp.data_pipeline_fighter_stats_prediction(self.prediction_df)
+                
+    def create_fighter_df(self, fighter1, fighter2):
+        self.populate_fighter_df(fighter1,'f1')
+        self.populate_fighter_df(fighter2,'f2')
 
 
-rf = RetrieveFighters()
-fighter = rf.get_fighter_details('Conor McGregor')
-rf.create_fighter_df(fighter)
-#print(rf.search_partial_fighter_name('Dodson').columns)
+if __name__ == ('__main__'):
+    rf = RetrieveFighters()
+    fighter1 = rf.get_fighter_details('Conor McGregor')
+    fighter2 =  rf.get_fighter_details('Jose Aldo')
+    rf.create_fighter_df(fighter1,fighter2)
+    rf.process_fight()

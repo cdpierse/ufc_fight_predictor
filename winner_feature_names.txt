@@ -48,6 +48,5 @@ f1_stance_Southpaw
 f1_stance_Switch
 f2_stance_Open Stance
 f2_stance_Orthodox
-f2_stance_Sideways
 f2_stance_Southpaw
 f2_stance_Switch
