@@ -10,6 +10,8 @@ class RetrieveFighters(FightDataPreprocessor):
 
         fdp.get_fighter_bouts()
         self.feature_names = fdp.feature_names
+        self.prediction_df = pd.DataFrame(columns=self.feature_names)
+
 
     def get_fighter_details(self,fighter_name):
         return self.fighters[self.fighters.fighter_name == fighter_name]
@@ -24,7 +26,6 @@ class RetrieveFighters(FightDataPreprocessor):
 
     def create_fighter_df(self,fighter):
         prefix = 'f1'
-        prediction_df = pd.DataFrame(columns=self.feature_names)
 
         df_structure = {'date_of_birth': prefix +'_dob',
                         'fighter_name':'fighter1',
@@ -44,9 +45,9 @@ class RetrieveFighters(FightDataPreprocessor):
                         }  
             
         for key,value in df_structure.items():
-            prediction_df[value] = fighter[key].values
+            self.prediction_df[value] = fighter[key].values
         
-        print(prediction_df.iloc[0])
+        print(self.prediction_df.iloc[0])
             
         
    

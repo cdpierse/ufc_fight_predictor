@@ -83,6 +83,9 @@ class FightDataPreprocessor:
         #for now we are not including the below 
 
         fightbouts = self.impute_dataframe(fightbouts)
+        
+        self.save_feature_names_to_file(fightbouts,'fight_stats_feature_names')
+
         fightbouts = self.standard_scale_dataframe(fightbouts)
 
         self.train_test_split_regular(fightbouts,targets)
@@ -108,6 +111,8 @@ class FightDataPreprocessor:
      
 
         fightbouts  = self.impute_dataframe(fightbouts)
+
+        self.save_feature_names_to_file(fightbouts,'winner_feature_names')
 
         self.original_values = fightbouts.as_matrix()
 
@@ -185,7 +190,6 @@ class FightDataPreprocessor:
         except FileNotFoundError:
             sys.exit('Unable to read Fighter Bouts Joined from disk. Exiting.')
         
-        self.feature_names = fighter_bouts.columns.values
 
         return fighter_bouts
 
@@ -391,6 +395,11 @@ class FightDataPreprocessor:
         except FileExistsError:
             print("Directory " , dirName ,  " already exists") 
             np.savetxt(file_location,file,delimiter= ',')
+
+    def save_feature_names_to_file(self,fight_bout_data,filename):
+        with open(filename+'.txt','w',encoding ='utf-8') as f:
+            for column in fight_bout_data.columns:
+                f.writelines(column+'\n')
        
 
 # fdp = FightDataPreprocessor()
