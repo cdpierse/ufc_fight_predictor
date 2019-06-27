@@ -18,9 +18,9 @@ def random_data_shuffle(x_train,y_train):
     return x_train,y_train
 
 def get_train_test_data(folder_name):
-    x_train = np.genfromtxt('Fight_Predictor/model_data/'+folder_name+'/X_train.csv', delimiter=',')
-    y_train = np.genfromtxt('Fight_Predictor/model_data/'+folder_name+'/y_train.csv', delimiter=',')
-    x_test = np.genfromtxt('Fight_Predictor/model_data/'+folder_name+'/X_test.csv', delimiter=',')
-    y_test = np.genfromtxt('Fight_Predictor/model_data/'+folder_name+'/y_test.csv', delimiter=',')
+    x_train = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/X_train.csv', delimiter=',')
+    y_train = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/y_train.csv', delimiter=',')
+    x_test = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/X_test.csv', delimiter=',')
+    y_test = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/y_test.csv', delimiter=',')
 
     return x_train,y_train,x_test,y_test

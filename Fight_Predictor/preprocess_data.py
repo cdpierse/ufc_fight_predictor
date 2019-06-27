@@ -6,6 +6,7 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import datetime as dt
 from pandas.api.types import CategoricalDtype
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
@@ -29,6 +30,7 @@ class FightDataPreprocessor:
                             "Lightweight","Welterweight", "Middleweight","Light Heavyweight",
                             "Heavyweight", "Super Heavyweight", "Open Weight","Catch Weight"
                             ]
+
 
     fight_stats_targets = [
                             'pass_stat_f1', 'pass_stat_f2', 'str_stat_f1', 'str_stat_f2',
@@ -76,11 +78,18 @@ class FightDataPreprocessor:
 
         if single_fight_bout is None:
             fightbouts = self.data_pipeline_generic()
+
             fightbouts = fightbouts.drop(columns =["winner"])
             targets = fightbouts[self.fight_stats_targets]
             fightbouts = fightbouts.drop(columns = targets.columns)
             fightbouts = self.impute_dataframe(fightbouts)
             self.save_feature_names_to_file(fightbouts,'fight_stats_feature_names')
+            fightbouts = self.standard_scale_dataframe(fightbouts)
+            self.train_test_split_regular(fightbouts,targets)
+            self.train_test_to_csv(self.X_train,'X_train')
+            self.train_test_to_csv(self.y_train,'y_train')
+            self.train_test_to_csv(self.X_test,'X_test')
+            self.train_test_to_csv(self.y_test,'y_test')  
 
         else:
             fightbouts = single_fight_bout
@@ -107,20 +116,17 @@ class FightDataPreprocessor:
                 elif 'stance' in column:
                     fightbouts[column] = 0
 
+            
+            fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f1')
+            fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f2')
+            drop_columns = ['f1_dob','f1_stance','f2_dob','f2_stance']
+            fightbouts = fightbouts.drop(columns = drop_columns)
             print(fightbouts.iloc[0])
 
-        if single_fight_bout is None:
-            fightbouts = self.standard_scale_dataframe(fightbouts)
-            self.train_test_split_regular(fightbouts,targets)
-            self.train_test_to_csv(self.X_train,'X_train')
-            self.train_test_to_csv(self.y_train,'y_train')
-            self.train_test_to_csv(self.X_test,'X_test')
-            self.train_test_to_csv(self.y_test,'y_test')  
-
-        else:
-            scaler = joblib.load(os.path.join(os.getcwd(),'Fight_Predictor',self.scaler_name + '.pkl'))
+            scaler = joblib.load(os.path.join(os.getcwd(),'Fight_Predictor','Scalers',self.scaler_name + '.pkl'))
             fightbouts = scaler.transform(fightbouts)
-            print(fightbouts.iloc[0])
+            return fightbouts
+
 
         print('Completed data preprocessing pipeline for fight statistics prediction...')
 
@@ -159,7 +165,7 @@ class FightDataPreprocessor:
         bad_value_columns = ['f1_dob','f2_dob','f1_height','f2_height']
 
         for column in bad_value_columns:
-            categorical_fbout = self.remove_bad_values(categorical_fbout,column)
+            categorical_fbout = self.replace_bad_values(categorical_fbout,column)
         
         dateime_columns = ['event_date','f1_dob','f2_dob']
         for column in dateime_columns:
@@ -278,7 +284,7 @@ class FightDataPreprocessor:
         fight_bout_data = fight_bout_data.drop(columns = cat_columns)
         return fight_bout_data
 
-    def remove_bad_values(self,categorical_data,column_name):
+    def replace_bad_values(self,categorical_data,column_name):
         categorical_data[column_name] = categorical_data[column_name].replace('--',None)
         return categorical_data
     
@@ -293,9 +299,13 @@ class FightDataPreprocessor:
 
         return categorical_data 
     
-    def calculate_age_at_fight(self,categorical_data,fighter_prefix):
-        categorical_data[fighter_prefix + '_ageAtFight'] = (categorical_data.event_date- categorical_data[fighter_prefix+'_dob']).dt.days
-        return categorical_data 
+    def calculate_age_at_fight(self,fight_bout_data,fighter_prefix,single_bout = None):
+        fight_bout_data[fighter_prefix + '_ageAtFight'] = (fight_bout_data.event_date- fight_bout_data[fighter_prefix+'_dob']).dt.days
+        return fight_bout_data 
+           
+    def calculate_age_at_fight_single(self,fight_bout_data,fighter_prefix):
+        fight_bout_data[fighter_prefix + '_ageAtFight'] = (dt.datetime.now() - fight_bout_data[fighter_prefix+'_dob']).dt.days
+        return fight_bout_data
     
     def parse_fighter_record(self,categorical_data):
 
@@ -392,7 +402,7 @@ class FightDataPreprocessor:
     
     def save_scaler(self,scaler):
         name = self.scaler_name
-        file_dir = os.path.join(os.getcwd(),'Fight_Predictor')
+        file_dir = os.path.join(os.getcwd(),'Fight_Predictor','Scalers')
         scaler_name = name + '.pkl'
         joblib.dump(scaler,os.path.join(file_dir,scaler_name))
 
@@ -415,7 +425,7 @@ class FightDataPreprocessor:
 
     def train_test_to_csv(self,file,filename):
 
-        dirName = os.path.join('Fight_Predictor/model_data',self.data_dir_name)
+        dirName = os.path.join('Fight_Predictor/Model_Data',self.data_dir_name)
         file_location = os.path.join(dirName, filename+".csv")
 
         try:
@@ -435,4 +445,3 @@ if __name__ == '__main__':
     fdp = FightDataPreprocessor()
     fdp.data_pipeline_winner_prediction()
     fdp.data_pipeline_fighter_stats_prediction()
-
