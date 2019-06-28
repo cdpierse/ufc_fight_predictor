@@ -93,7 +93,6 @@ class FightDataPreprocessor:
 
         else:
             fightbouts = single_fight_bout
-
             lambda_fn = lambda x: self.parse_fighter_height(x)     
             fightbouts['f1_height'] = fightbouts['f1_height'].apply(lambda_fn)
             fightbouts['f2_height'] = fightbouts['f2_height'].apply(lambda_fn)
@@ -115,47 +114,42 @@ class FightDataPreprocessor:
                     fightbouts[column] = 1
                 elif 'stance' in column:
                     fightbouts[column] = 0
-
             
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f1')
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f2')
             drop_columns = ['f1_dob','f1_stance','f2_dob','f2_stance']
             fightbouts = fightbouts.drop(columns = drop_columns)
-            print(fightbouts.iloc[0])
 
             scaler = joblib.load(os.path.join(os.getcwd(),'Fight_Predictor','Scalers',self.scaler_name + '.pkl'))
-            fightbouts = scaler.transform(fightbouts)
-            return fightbouts
-
+            fightbouts_scaled = scaler.transform(fightbouts)
+            return fightbouts_scaled, fightbouts
 
         print('Completed data preprocessing pipeline for fight statistics prediction...')
 
 
-    def data_pipeline_winner_prediction(self):
-
+    def data_pipeline_winner_prediction(self,single_fight_bout = None):
         self.scaler_name = 'winner_scaler'
         self.data_dir_name = 'winner_prediction_data'
 
-        fightbouts = self.data_pipeline_generic()
+        if single_fight_bout is None:
+            fightbouts = self.data_pipeline_generic()
+            target = self.get_winners_target(fightbouts)
+            fightbouts = fightbouts.drop(columns =["winner"])
+            fightbouts  = self.impute_dataframe(fightbouts)
+            self.save_feature_names_to_file(fightbouts,'winner_feature_names')
+            self.original_values = fightbouts.as_matrix()
+            fightbouts = self.standard_scale_dataframe(fightbouts)
+            self.strata_shuffle_data(fightbouts,target)
+            self.train_test_to_csv(self.X_train,'X_train')
+            self.train_test_to_csv(self.y_train,'y_train')
+            self.train_test_to_csv(self.X_test,'X_test')
+            self.train_test_to_csv(self.y_test,'y_test')
+        else:
+            fightbouts = single_fight_bout
+            scaler = joblib.load(os.path.join(os.getcwd(),'Fight_Predictor','Scalers',self.scaler_name + '.pkl'))
+            fightbouts_scaled = scaler.transform(fightbouts)
+            return fightbouts_scaled
 
-        target = self.get_winners_target(fightbouts)
-        
-        fightbouts = fightbouts.drop(columns =["winner"])
-      
-        fightbouts  = self.impute_dataframe(fightbouts)
-
-        self.save_feature_names_to_file(fightbouts,'winner_feature_names')
-
-        self.original_values = fightbouts.as_matrix()
-
-        fightbouts = self.standard_scale_dataframe(fightbouts)
-
-        self.strata_shuffle_data(fightbouts,target)
-
-        self.train_test_to_csv(self.X_train,'X_train')
-        self.train_test_to_csv(self.y_train,'y_train')
-        self.train_test_to_csv(self.X_test,'X_test')
-        self.train_test_to_csv(self.y_test,'y_test')
 
         print('Completed data preprocessing pipeline for winner prediction...')
 
