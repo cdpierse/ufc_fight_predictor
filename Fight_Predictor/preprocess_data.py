@@ -93,6 +93,10 @@ class FightDataPreprocessor:
 
         else:
             fightbouts = single_fight_bout
+            for column in fightbouts.columns:
+                if fightbouts[column].isna().any():
+                    fightbouts[column] = 0
+            #fightbouts = imputer.transform(fightbouts)
             lambda_fn = lambda x: self.parse_fighter_height(x)     
             fightbouts['f1_height'] = fightbouts['f1_height'].apply(lambda_fn)
             fightbouts['f2_height'] = fightbouts['f2_height'].apply(lambda_fn)
@@ -107,13 +111,23 @@ class FightDataPreprocessor:
             stance_value1 = fightbouts[stance1].iloc[0]
             stance_value2 = fightbouts[stance2].iloc[0]
 
+            print(fightbouts.iloc[0])
             for column in fightbouts.columns:
-                if 'f1' in column and stance_value1 in column:
-                    fightbouts[column] = 1
-                elif 'f2' in column and stance_value2 in column:
-                    fightbouts[column] = 1
-                elif 'stance' in column:
-                    fightbouts[column] = 0
+                if stance_value1 == 0:
+                    stance_value1 = 'Orthodox'
+                if stance_value2 == 0:
+                    stance_value2 = 'Orthodox'
+                try:
+                    if 'f1' in column and stance_value1 in column:
+                        fightbouts[column] = 1
+                    elif 'f2' in column and stance_value2 in column:
+                        fightbouts[column] = 1
+                    elif 'stance' in column:
+                        fightbouts[column] = 0
+                except ValueError as e:
+                    print(e)
+                    print('Error on stance values, zero padding results')
+                    fightbouts[column] =0
             
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f1')
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f2')
@@ -147,6 +161,7 @@ class FightDataPreprocessor:
         else:
             fightbouts = single_fight_bout
             scaler = joblib.load(os.path.join(os.getcwd(),'Fight_Predictor','Scalers',self.scaler_name + '.pkl'))
+            fightbouts = self.impute_dataframe(fightbouts)
             fightbouts_scaled = scaler.transform(fightbouts)
             return fightbouts_scaled
 
@@ -389,7 +404,9 @@ class FightDataPreprocessor:
     def impute_dataframe(self,fight_bout_data):
         columns = fight_bout_data.columns
         imputer = SimpleImputer(strategy= 'most_frequent',copy= False)
-        imputed_data = imputer.fit_transform(fight_bout_data)
+        imputer.fit(fight_bout_data)
+        imputed_data = imputer.transform(fight_bout_data)
+        self.save_imputer(imputer)
 
         fight_bouts_imputed = pd.DataFrame(imputed_data, columns=columns)
         return fight_bouts_imputed
@@ -399,6 +416,12 @@ class FightDataPreprocessor:
         file_dir = os.path.join(os.getcwd(),'Fight_Predictor','Scalers')
         scaler_name = name + '.pkl'
         joblib.dump(scaler,os.path.join(file_dir,scaler_name))
+
+    def save_imputer(self,imputer):
+        name = 'imputer'
+        file_dir = os.path.join(os.getcwd(),'Fight_Predictor','Imputer')
+        imputer_name = name + '.pkl'
+        joblib.dump(imputer,os.path.join(file_dir,imputer_name))
 
 
     def strata_shuffle_data(self,fight_bout_data,target):

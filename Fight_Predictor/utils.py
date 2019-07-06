@@ -1,7 +1,7 @@
 #import tensorflow._api.v1.keras.backend as K
 import tensorflow.keras.backend as K
 import numpy as np
-
+import os
 
 def r2(y_true, y_pred):
     SS_res = K.sum(K.square( y_true-y_pred ))
@@ -18,9 +18,10 @@ def random_data_shuffle(x_train,y_train):
     return x_train,y_train
 
 def get_train_test_data(folder_name):
-    x_train = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/X_train.csv', delimiter=',')
-    y_train = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/y_train.csv', delimiter=',')
-    x_test = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/X_test.csv', delimiter=',')
-    y_test = np.genfromtxt('Fight_Predictor/Model_Data/'+folder_name+'/y_test.csv', delimiter=',')
+    directory = os.path.join('Fight_Predictor','Data','Model_Data',folder_name)
+    x_train = np.genfromtxt(os.path.join(directory,'X_train.csv'), delimiter=',')
+    y_train = np.genfromtxt(os.path.join(directory,'y_train.csv'), delimiter=',')
+    x_test = np.genfromtxt(os.path.join(directory,'X_test.csv'), delimiter=',')
+    y_test = np.genfromtxt(os.path.join(directory,'y_train.csv'), delimiter=',')
 
     return x_train,y_train,x_test,y_test

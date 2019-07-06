@@ -108,8 +108,10 @@ class GetPredictions:
         filepath = os.path.join(current_dir,'Saved_Models','Winner_Prediction_Models','bout_winner.h5')
 
         model = keras.models.load_model(filepath)
+        implied_abs_probability = self.calculate_implied_probability(model.predict(scaled)[0])
+        print(f'Implied Probability is {implied_abs_probability[0]}')
 
-        return model.predict(scaled)
+        return model.predict_classes(scaled)
        
     def create_final_df(self):
         """predicts what the stats will be for a given bout, inserts that data into the final 
@@ -126,17 +128,29 @@ class GetPredictions:
                 self.prediction_df[col_name] = prediction
 
         self.prediction_df = self.prediction_df[self.winner_feature_names]
-        print(self.prediction_df.iloc[0])
+    def calculate_implied_probability(self,model_output):
+        if model_output < 0.50:
+            return 1 - model_output
+        else:
+            return (model_output)
+
             
 if __name__ == ('__main__'):
     gp = GetPredictions()
-    fighter1_name =  'BJ Penn'
-    fighter2_name = 'Clay Guida'
+    fighter1_name = 'Gilbert Melendez'
+    fighter2_name = 'Arnold Allen' 
     fighter1 = gp.get_fighter_details(fighter1_name)
     fighter2 = gp.get_fighter_details(fighter2_name)
-    gp.create_fighter_dataframe(fighter1,fighter2,0)
+   
+    gp.create_fighter_dataframe(fighter1,fighter2,5)
     gp.create_final_df()
-    print(gp.predict_bout_winner())
+    
+    result = gp.predict_bout_winner()
+    if result[0] == 0:
+        print(f'Predicted Winner is {fighter1_name}')
+    else:
+        print(f'Predicted Winner is {fighter2_name}')
+
 
 
     
