@@ -1,4 +1,3 @@
-#import tensorflow._api.v1.keras.backend as K
 import tensorflow.keras.backend as K
 import numpy as np
 import os
@@ -22,6 +21,7 @@ def get_train_test_data(folder_name):
     x_train = np.genfromtxt(os.path.join(directory,'X_train.csv'), delimiter=',')
     y_train = np.genfromtxt(os.path.join(directory,'y_train.csv'), delimiter=',')
     x_test = np.genfromtxt(os.path.join(directory,'X_test.csv'), delimiter=',')
-    y_test = np.genfromtxt(os.path.join(directory,'y_train.csv'), delimiter=',')
+    y_test = np.genfromtxt(os.path.join(directory,'y_test.csv'), delimiter=',')
 
     return x_train,y_train,x_test,y_test
+

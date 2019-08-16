@@ -9,11 +9,13 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-BOT_NAME = 'bouts_scraped'
+# BOT_NAME = 'BoutsSpider'
 
-SPIDER_MODULES = ['bouts_scraped.spiders']
-NEWSPIDER_MODULE = 'bouts_scraped.spiders'
+# SPIDER_MODULES = ['bouts_scraped.spiders']
+# NEWSPIDER_MODULE = 'bouts_scraped.spiders'
 
+# FEED_FORMAT = 'csv'
+# FEED_URI = 'test.csv'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'bouts_scraped (+http://www.yourdomain.com)'
@@ -65,7 +67,7 @@ DOWNLOAD_DELAY = 1.5
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'bouts_scraped.pipelines.BoutsScrapedPipeline': 300,
+   'pipelines.BoutsScrapedPipeline': 100,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

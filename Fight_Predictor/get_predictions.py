@@ -1,13 +1,13 @@
 import os
-
 import pandas as pd
-
 from preprocess_data import FightDataPreprocessor
 from utils import r2
 from tensorflow import keras
+from utils import get_train_test_data
+
 
 class GetPredictions:
-    
+  
     def __init__(self):
 
         self.fdp = FightDataPreprocessor()
@@ -137,12 +137,12 @@ class GetPredictions:
             
 if __name__ == ('__main__'):
     gp = GetPredictions()
-    fighter1_name = 'Gilbert Melendez'
-    fighter2_name = 'Arnold Allen' 
+    fighter1_name = 'Ben Askren'
+    fighter2_name = 'Jorge Masvidal' 
     fighter1 = gp.get_fighter_details(fighter1_name)
     fighter2 = gp.get_fighter_details(fighter2_name)
    
-    gp.create_fighter_dataframe(fighter1,fighter2,5)
+    gp.create_fighter_dataframe(fighter1,fighter2,7)
     gp.create_final_df()
     
     result = gp.predict_bout_winner()
@@ -150,7 +150,3 @@ if __name__ == ('__main__'):
         print(f'Predicted Winner is {fighter1_name}')
     else:
         print(f'Predicted Winner is {fighter2_name}')
-
-
-
-    

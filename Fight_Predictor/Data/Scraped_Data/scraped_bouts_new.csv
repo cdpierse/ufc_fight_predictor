@@ -1,0 +1,57 @@
+event_attendance,event_date,event_name,fighter1,fighter2,pass_stat_f1,pass_stat_f2,round,str_stat_f1,str_stat_f2,sub_stat_f1,sub_stat_f2,td_stat_f1,td_stat_f2,time,weight_class,win_method_finish,win_method_type,winner
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Robert Whittaker,Yoel Romero,0,0,5,128,111,0,0,0,3,5.0,Middleweight,,S-DEC,Robert Whittaker
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Colby Covington,Rafael Dos Anjos,2,1,5,99,105,0,0,7,3,5.0,Welterweight,,U-DEC,Colby Covington
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Holly Holm,Megan Anderson,9,0,3,47,26,1,0,4,0,5.0,Women's Featherweight,,U-DEC,Holly Holm
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Tai Tuivasa,Andrei Arlovski,1,0,3,54,51,0,0,0,0,5.0,Heavyweight,,U-DEC,Tai Tuivasa
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Mike Jackson,CM Punk,1,1,3,64,19,0,0,1,1,5.0,Welterweight,,U-DEC,Mike Jackson
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Curtis Blaydes,Alistair Overeem,6,0,3,37,7,0,2,4,0,2.56,Heavyweight,Elbows,KO/TKO,Curtis Blaydes
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Claudia Gadelha,Carla Esparza,6,1,3,26,43,1,0,4,2,5.0,Women's Strawweight,,S-DEC,Claudia Gadelha
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Mirsad Bektic,Ricardo Lamas,1,0,3,31,34,0,2,2,0,5.0,Featherweight,,S-DEC,Mirsad Bektic
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Chris de la Rocha,Rashad Coulter,5,0,2,40,30,2,0,3,0,3.53,Heavyweight,Punches,KO/TKO,Chris de la Rocha
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Anthony Smith,Rashad Evans,0,0,1,6,1,0,0,0,0,0.53,Light Heavyweight,Knee,KO/TKO,Anthony Smith
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Sergio Pettis,Joseph Benavidez,0,0,3,74,59,0,0,0,2,5.0,Flyweight,,S-DEC,Sergio Pettis
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Charles Oliveira,Clay Guida,0,0,1,14,9,1,0,0,0,2.18,Lightweight,Guillotine Choke,SUB,Charles Oliveira
+18117,June 09 2018,UFC 225: Whittaker vs. Romero 2,Dan Ige,Mike Santiago,2,0,1,25,0,0,0,1,0,0.5,Featherweight,Punches,KO/TKO,Dan Ige
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Leon Edwards,Donald Cerrone,0,1,5,84,60,0,0,0,1,5.0,Welterweight,,U-DEC,Leon Edwards
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Ovince Saint Preux,Tyson Pedro,0,0,1,7,9,1,1,0,0,2.54,Light Heavyweight,Armbar,SUB,Ovince Saint Preux
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Jessica Eye,Jessica-Rose Clark,2,0,3,67,51,0,0,1,0,5.0,Women's Flyweight,,U-DEC,Jessica Eye
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Li Jingliang,Daichi Abe,0,0,3,96,45,0,0,0,0,5.0,Welterweight,,U-DEC,Li Jingliang
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Petr Yan,Teruto Ishihara,1,0,1,25,11,0,0,0,0,3.28,Bantamweight,Punch,KO/TKO,Petr Yan
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Song Yadong,Felipe Arantes,3,0,2,39,8,1,0,1,0,4.59,Bantamweight,Elbow,KO/TKO,Song Yadong
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Shane Young,Rolando Dy,1,0,2,104,57,0,0,1,0,4.4,Featherweight,Elbow,KO/TKO,Shane Young
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Song Kenan,Hector Aldana,0,0,2,32,39,0,0,0,2,4.45,Welterweight,Punch,KO/TKO,Song Kenan
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Jake Matthews,Shinsho Anzai,2,0,1,12,1,1,0,1,0,2.44,Welterweight,Rear Naked Choke,SUB,Jake Matthews
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Yan Xiaonan,Viviane Pereira,0,0,3,71,44,0,0,0,0,5.0,Women's Strawweight,,U-DEC,Yan Xiaonan
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Matt Schnell,Naoki Inoue,0,0,3,71,48,0,0,0,0,5.0,Flyweight,,S-DEC,Matt Schnell
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Ulka Sasaki,Jenel Lausa,9,0,2,25,7,1,0,5,0,4.04,Flyweight,Rear Naked Choke,SUB,Ulka Sasaki
+6419,June 23 2018,UFC Fight Night: Cowboy vs. Edwards,Ji Yeon Kim,Melinda Fabian,0,0,3,73,72,0,0,0,0,5.0,Women's Flyweight,,S-DEC,Ji Yeon Kim
+2123,July 06 2018,UFC - TUF 27 Finale,Israel Adesanya,Brad Tavares,2,1,5,119,40,1,0,0,1,5.0,Middleweight,,U-DEC,Israel Adesanya
+2123,July 06 2018,UFC - TUF 27 Finale,Michael Trizano,Joe Giannetti,2,0,3,42,29,1,0,0,1,5.0,Lightweight,,S-DEC,Michael Trizano
+2123,July 06 2018,UFC - TUF 27 Finale,Brad Katona,Jay Cucciniello,3,0,3,71,14,0,0,2,0,5.0,Featherweight,,U-DEC,Brad Katona
+2123,July 06 2018,UFC - TUF 27 Finale,Alex Caceres,Martin Bravo,1,0,3,82,78,0,0,0,3,5.0,Featherweight,,S-DEC,Alex Caceres
+2123,July 06 2018,UFC - TUF 27 Finale,Roxanne Modafferi,Barb Honchak,4,0,2,51,24,0,0,1,0,3.32,Women's Flyweight,Elbows,KO/TKO,Roxanne Modafferi
+2123,July 06 2018,UFC - TUF 27 Finale,Alessio Di Chirico,Julian Marquez,2,1,3,50,47,0,2,4,0,5.0,Middleweight,,S-DEC,Alessio Di Chirico
+2123,July 06 2018,UFC - TUF 27 Finale,Montana De La Rosa,Rachael Ostovich,2,0,3,56,40,1,1,0,0,4.21,Women's Flyweight,Rear Naked Choke,SUB,Montana De La Rosa
+2123,July 06 2018,UFC - TUF 27 Finale,Luis Pena,Richie Smullen,1,1,1,8,7,1,0,1,2,3.32,Lightweight,Guillotine Choke,SUB,Luis Pena
+2123,July 06 2018,UFC - TUF 27 Finale,John Gunther,Allan Zuniga,3,0,3,27,59,0,1,8,0,5.0,Lightweight,,M-DEC,John Gunther
+2123,July 06 2018,UFC - TUF 27 Finale,Bryce Mitchell,Tyler Diamond,0,5,3,38,51,1,0,3,3,5.0,Featherweight,,M-DEC,Bryce Mitchell
+2123,July 06 2018,UFC - TUF 27 Finale,Steven Peterson,Matt Bessette,2,0,3,74,57,1,0,2,0,5.0,Featherweight,,S-DEC,Steven Peterson
+2123,July 06 2018,UFC - TUF 27 Finale,Gerald Meerschaert,Oskar Piechota,3,6,2,51,23,2,2,3,1,4.55,Middleweight,Rear Naked Choke,SUB,Gerald Meerschaert
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Daniel Cormier,Stipe Miocic,0,0,1,25,24,0,0,0,1,4.33,Heavyweight,Punches,KO/TKO,Daniel Cormier
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Derrick Lewis,Francis Ngannou,0,0,3,20,11,0,0,0,0,5.0,Heavyweight,,U-DEC,Derrick Lewis
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Mike Perry,Paul Felder,0,0,3,62,56,0,0,2,0,5.0,Welterweight,,S-DEC,Mike Perry
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Anthony Pettis,Michael Chiesa,0,1,2,9,12,2,0,0,2,0.52,Lightweight,Triangle Choke,SUB,Anthony Pettis
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Khalil Rountree Jr.,Gokhan Saki,0,0,1,9,5,0,0,0,0,1.36,Light Heavyweight,Punches,KO/TKO,Khalil Rountree Jr.
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Paulo Costa,Uriah Hall,0,0,2,75,58,0,0,0,0,2.38,Middleweight,Punches,KO/TKO,Paulo Costa
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Raphael Assuncao,Rob Font,4,0,3,54,20,0,0,2,0,5.0,Bantamweight,,U-DEC,Raphael Assuncao
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Drakkar Klose,Lando Vannata,0,1,3,55,50,0,0,1,1,5.0,Lightweight,,U-DEC,Drakkar Klose
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Curtis Millender,Max Griffin,0,1,3,38,44,0,0,1,1,5.0,Welterweight,,U-DEC,Curtis Millender
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Dan Hooker,Gilbert Burns,0,0,1,22,13,1,0,0,0,2.28,Lightweight,Punches,KO/TKO,Dan Hooker
+17464,July 07 2018,UFC 226: Miocic vs. Cormier,Emily Whitmire,Jamie Moyle,1,0,3,53,50,0,0,1,0,5.0,Women's Strawweight,,U-DEC,Emily Whitmire
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Junior Dos Santos,Blagoy Ivanov,0,0,5,110,51,0,0,0,0,5.0,Heavyweight,,U-DEC,Junior Dos Santos
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Sage Northcutt,Zak Ottow,1,6,2,24,6,1,1,1,1,3.13,Welterweight,Punch,KO/TKO,Sage Northcutt
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Rick Glenn,Dennis Bermudez,0,1,3,48,42,1,0,0,6,5.0,Featherweight,,S-DEC,Rick Glenn
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Niko Price,Randy Brown,0,1,2,12,13,0,0,1,1,1.09,Welterweight,Punch,KO/TKO,Niko Price
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Chad Mendes,Myles Jury,0,0,1,17,3,0,0,0,0,2.52,Featherweight,Punch,KO/TKO,Chad Mendes
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Cat Zingano,Marion Reneau,2,0,3,33,14,0,0,6,0,5.0,Women's Bantamweight,,U-DEC,Cat Zingano
+5648,July 14 2018,UFC Fight Night: Dos Santos vs. Ivanov,Alejandro Perez,Eddie Wineland,0,0,3,53,48,0,0,0,0,5.0,Bantamweight,,U-DEC,Alejandro Perez

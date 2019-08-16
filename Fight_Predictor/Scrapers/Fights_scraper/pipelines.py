@@ -4,11 +4,13 @@
 #
 # Don't forget to add your pipeline to the ITEM_PIPELINES setting
 # See: https://doc.scrapy.org/en/latest/topics/item-pipeline.html
+import os
 from scrapy.exporters import CsvItemExporter
+
 
 class FightsScraperPipeline(object):
     def __init__(self):
-        self.file = open("scraped_fighters.csv", 'ab')
+        self.file = open(os.path.join(os.getcwd(),"Fight_Predictor","Data",'Scraped_Data',"scraped_fighters.csv"),'wb')
         self.exporter = CsvItemExporter(self.file)
         self.exporter.start_exporting()
 

@@ -111,7 +111,6 @@ class FightDataPreprocessor:
             stance_value1 = fightbouts[stance1].iloc[0]
             stance_value2 = fightbouts[stance2].iloc[0]
 
-            print(fightbouts.iloc[0])
             for column in fightbouts.columns:
                 if stance_value1 == 0:
                     stance_value1 = 'Orthodox'
@@ -128,6 +127,8 @@ class FightDataPreprocessor:
                     print(e)
                     print('Error on stance values, zero padding results')
                     fightbouts[column] =0
+            print(fightbouts.iloc[0])
+
             
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f1')
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f2')
@@ -203,7 +204,7 @@ class FightDataPreprocessor:
 
 
     def get_fighters(self):
-        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Fights_scraper','spiders')
+        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Data','Scraped_Data')
        
         try:
             print(os.getcwd())
@@ -214,9 +215,7 @@ class FightDataPreprocessor:
         return fighters
 
     def get_bouts(self):
-        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Bouts_scraper',
-                                            'bouts_scraped','bouts_scraped',
-                                            'spiders')
+        filedir = os.path.join(os.getcwd(),'Fight_Predictor','Data','Scraped_Data')
 
         try:
             bouts = pd.read_csv(os.path.join(filedir,'scraped_bouts.csv'))

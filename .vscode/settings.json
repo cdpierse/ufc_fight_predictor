@@ -1,3 +1,7 @@
 {
-    "python.pythonPath": "/Users/charlespierse/anaconda3/bin/python"
+    "python.pythonPath": "/Users/charlespierse/anaconda3/bin/python",
+    "python.linting.pylintPath": "/Users/charlespierse/anaconda3/bin/pylint",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "python.jediMemoryLimit": 2000
 }
