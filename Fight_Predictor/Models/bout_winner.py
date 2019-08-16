@@ -5,6 +5,7 @@ import tensorflow as tf
 
 from tensorflow.keras.layers import Dense, Dropout
 from utils import random_data_shuffle, get_train_test_data
+
 #from Fight_Predictor.utils import random_data_shuffle, get_train_test_data
 
 #from utils import random_data_shuffle,get_train_test_data
@@ -56,7 +57,7 @@ model.compile(
 
 model.fit(x_train,y_train, epochs= epochs, batch_size= 128,validation_split= 0.05)
 
-model.save('Fight_Predictor/Saved_Models/Winner_Prediction_Models/bout_winner.h5')
+#model.save('Fight_Predictor/Saved_Models/Winner_Prediction_Models/bout_winner.h5')
 
 scores = model.evaluate(x_test,y_test)
 
