@@ -1,7 +1,7 @@
 
 import sys
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor')
-
+import os
+sys.path.append(os.path.join(os.getcwd(), 'Fight_Predictor'))
 import datetime
 import sys
 

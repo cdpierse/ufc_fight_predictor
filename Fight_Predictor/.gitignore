@@ -7,6 +7,8 @@
 # $ git config --global mergetool.keepBackup false
 *.orig
 
+.vscode
+settings.json
 # Created by git when using merge tools for conflicts
 *.BACKUP.*
 *.BASE.*

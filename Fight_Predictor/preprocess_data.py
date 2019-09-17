@@ -14,6 +14,7 @@ from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 from sklearn.externals import joblib
 pd.set_option('mode.chained_assignment', None)
 
+
 class FightDataPreprocessor:
     X_train = None
     y_train = None
@@ -127,7 +128,7 @@ class FightDataPreprocessor:
                     print(e)
                     print('Error on stance values, zero padding results')
                     fightbouts[column] =0
-            print(fightbouts.iloc[0])
+            #print(fightbouts.iloc[0])
 
             
             fightbouts=  self.calculate_age_at_fight_single(fightbouts,'f1')
@@ -207,8 +208,6 @@ class FightDataPreprocessor:
         filedir = os.path.join(os.getcwd(),'Fight_Predictor','Data','Scraped_Data')
        
         try:
-            print(os.getcwd())
-            print(os.path.join(filedir,'scraped_fighters.csv'))
             fighters = pd.read_csv(os.path.join(filedir,'scraped_fighters.csv'))
         except FileNotFoundError:
             sys.exit('Unable to read Fighters file from disk. Exiting.')

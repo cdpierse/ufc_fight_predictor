@@ -1,7 +1,10 @@
 {
-    "python.pythonPath": "/Users/charlespierse/anaconda3/bin/python",
-    "python.linting.pylintPath": "/Users/charlespierse/anaconda3/bin/pylint",
-    "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true,
-    "python.jediMemoryLimit": 2000
+        "python.linting.flake8Enabled": false,
+        "python.linting.pylintEnabled": true,
+        "python.linting.enabled": true,
+        "python.pythonPath": "/anaconda3/envs/siamese_network/bin/python",
+        "python.linting.pylintArgs": [
+                "--init-hook",
+                "import sys; sys.path.append('/anaconda3/pkgs')"
+            ]
 }
