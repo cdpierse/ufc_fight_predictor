@@ -1,17 +1,21 @@
-import os
-import pandas as pd
-import numpy as np
 import math
+import os
+
+import numpy as np
+import pandas as pd
+from pandas.api.types import CategoricalDtype
+
+pd.set_option('mode.chained_assignment', None)
+
+
+ORDERED_WEIGHT_CLASSES = [
+    "Women's Strawweight", "Women's Flyweight", "Women's Bantamweight",
+    "Women's Featherweight", "Flyweight", "Bantamweight", "Featherweight",
+    "Lightweight", "Welterweight", "Middleweight", "Light Heavyweight",
+    "Heavyweight", "Super Heavyweight", "Open Weight", "Catch Weight"]
 
 
 class Processor:
-
-    ORDERED_WEIGHT_CLASSES = [
-        "Women's Strawweight", "Women's Flyweight", "Women's Bantamweight",
-        "Women's Featherweight", "Flyweight", "Bantamweight", "Featherweight",
-        "Lightweight", "Welterweight", "Middleweight", "Light Heavyweight",
-        "Heavyweight", "Super Heavyweight", "Open Weight", "Catch Weight"
-    ]
 
     def __init__(self, state=None):
         if state is None:
@@ -51,7 +55,7 @@ class Processor:
         def index_shuffle(fight_bouts):
             random_winner_index = np.random.choice(len(self.fight_bouts),
                                                    size=math.ceil(
-                                                       len(self.fight_bouts)/2),
+                                                       len(self.fight_bouts) / 2),
                                                    replace=False)
             return random_winner_index
 
@@ -64,7 +68,7 @@ class Processor:
             columns_index = []
             [columns_index.append(self.fight_bouts.columns.get_loc(col))
              for col in self.fight_bouts.columns if col in column_names]
-            return columns_index 
+            return columns_index
 
         def rearrange_data_to_col_index(col_index1, col_index2, fb_copy=None):
             self.fight_bouts.iloc[random_winner_index,
@@ -90,13 +94,40 @@ class Processor:
 
         fight_bouts_copy = self.fight_bouts.copy()
 
-        rearrange_data_to_col_index(fighter1_col_index,fighter2_col_index,fight_bouts_copy)
+        rearrange_data_to_col_index(
+            fighter1_col_index, fighter2_col_index, fight_bouts_copy)
+
+    def get_categorical_dataframe(self):
+
+        columns_with_dashes = ['f1_dob', 'f2_dob', 'f1_height', 'f2_height']
+        dateime_columns = ['event_date', 'f1_dob', 'f2_dob']
+
+        def replace_dashes(columns):
+            for column in columns:
+                self.categorical_data.loc[self.categorical_data[column]
+                                          == '--', column] = None
+
+        def column_to_datetime(columns):
+            for column in columns:
+                self.categorical_data[column] = pd.to_datetime(
+                    self.categorical_data[column])
+
+        def make_weight_classes_ordinal():
+            self.categorical_data["weight_class"] = self.categorical_data.weight_class.astype(
+                CategoricalDtype(categories=ORDERED_WEIGHT_CLASSES, ordered=True)).cat.codes
+
+        self.categorical_data = self.fight_bouts.select_dtypes(
+            include='object')
+
+        replace_dashes(columns_with_dashes)
+        column_to_datetime(dateime_columns)
+        make_weight_classes_ordinal()
 
     def main(self):
-
         self.read()
         self.drop_unused_columns()
         self.shuffle_winner_positions()
+        self.get_categorical_dataframe()
 
 
 class StatsProcessor(Processor):
