@@ -310,7 +310,7 @@ class Processor:
         self.X_train, self.y_train = X_train, y_train.values
         self.X_test, self.y_test = X_test, y_test.values
 
-    def save_train_test_to_file(self, folder):
+    def save_train_test_to_file(self, folder, f_stats_cols=None):
         save_loc = os.path.join(self.base_dir, 'Data',
                                 'Processed_Data', folder)
         print(f'saving at {save_loc}')
@@ -321,7 +321,8 @@ class Processor:
                             x_test=self.X_test,
                             y_test=self.y_test,
                             original_values=self.original_values,
-                            feature_names=self.feature_names)
+                            feature_names=self.feature_names,
+                            fight_stats_columns=f_stats_cols)
 
     def main(self):
         self.read()
@@ -366,11 +367,11 @@ class StatsProcessor(Processor):
         self.impute()
         self.scale()
         self.split_data()
-        self.save_train_test_to_file('Fight_Stats')
+        self.save_train_test_to_file('Fight_Stats', self.fight_stats_targets)
 
 
 if __name__ == "__main__":
-    # p = Processor()
-    # p.main()
+    p = Processor()
+    p.main()
     sp = StatsProcessor()
     sp.main()
