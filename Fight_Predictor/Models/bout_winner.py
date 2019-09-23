@@ -20,7 +20,7 @@ sys.path.append(os.path.join(os.getcwd(), 'Fight_Predictor'))
 np.random.seed(7)
 
 x_train, y_train, x_test, y_test = get_train_test_data(
-    'winner_prediction_data')
+    'Fight_Winner')
 
 x_train, y_train = random_data_shuffle(x_train, y_train)
 

@@ -80,7 +80,7 @@ class FightDataPreprocessor:
         if single_fight_bout is None:
             fightbouts = self.data_pipeline_generic()
 
-            fightbouts = fightbouts.drop(columns =["winner"])
+            fightbouts = fightbouts.drop(columns = ["winner"])
             targets = fightbouts[self.fight_stats_targets]
             fightbouts = fightbouts.drop(columns = targets.columns)
             fightbouts = self.impute_dataframe(fightbouts)

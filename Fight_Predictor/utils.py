@@ -16,12 +16,14 @@ def random_data_shuffle(x_train,y_train):
 
     return x_train,y_train
 
+
 def get_train_test_data(folder_name):
-    directory = os.path.join('Fight_Predictor','Data','Model_Data',folder_name)
-    x_train = np.genfromtxt(os.path.join(directory,'X_train.csv'), delimiter=',')
-    y_train = np.genfromtxt(os.path.join(directory,'y_train.csv'), delimiter=',')
-    x_test = np.genfromtxt(os.path.join(directory,'X_test.csv'), delimiter=',')
-    y_test = np.genfromtxt(os.path.join(directory,'y_test.csv'), delimiter=',')
+    directory = os.path.join('Fight_Predictor', 'Data',
+                             'Processed_Data', folder_name)
+    with np.load(os.path.join(directory, 'data.npz')) as data:
+        x_train = data['x_train']
+        y_train = data['y_train']
+        x_test = data['x_test']
+        y_test = data['y_test']
 
-    return x_train,y_train,x_test,y_test
-
+    return x_train, y_train, x_test, y_test

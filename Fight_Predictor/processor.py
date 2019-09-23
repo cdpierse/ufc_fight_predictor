@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd
 from pandas.api.types import CategoricalDtype
 from sklearn.impute import SimpleImputer
-from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
 from sklearn.preprocessing import RobustScaler
 
 pd.set_option("mode.chained_assignment", None)
@@ -62,7 +62,7 @@ class Processor:
             if column in self.fight_bouts.columns:
                 self.fight_bouts = self.fight_bouts.drop(columns=[column])
             else:
-                print("{column} is not in fight_bouts")
+                print(f"{column} not dropped as it is not in dataframe")
 
     def shuffle_winner_positions(self):
         """
@@ -243,10 +243,11 @@ class Processor:
 
             win, loss, draw, nc = int(win), int(loss), int(draw), int(nc)
 
-            self.categorical_data.loc[self.record_index,
-                                      prefix + '_win'] = win
-            self.categorical_data.loc[self.record_index,
-                                      prefix + '_loss'] = loss
+            # Blocking this out for now, as model seems to lean on wins and losses heavily
+            # self.categorical_data.loc[self.record_index,
+            #                           prefix + '_win'] = win
+            # self.categorical_data.loc[self.record_index,
+            #                           prefix + '_loss'] = loss
             self.categorical_data.loc[self.record_index,
                                       prefix + '_draw'] = draw
             self.categorical_data.loc[self.record_index,
@@ -309,11 +310,12 @@ class Processor:
         self.X_train, self.y_train = X_train, y_train.values
         self.X_test, self.y_test = X_test, y_test.values
 
-    def save_train_test_to_file(self):
+    def save_train_test_to_file(self, folder):
         save_loc = os.path.join(self.base_dir, 'Data',
-                                'Processed_Data', 'Fight_Winner')
+                                'Processed_Data', folder)
+        print(f'saving at {save_loc}')
 
-        np.savez_compressed(os.path.join(save_loc, 'winner_data'),
+        np.savez_compressed(os.path.join(save_loc, 'data'),
                             x_train=self.X_train,
                             y_train=self.y_train,
                             x_test=self.X_test,
@@ -330,22 +332,45 @@ class Processor:
         self.impute()
         self.scale()
         self.stratify_shuffle()
-        self.save_train_test_to_file()
+        self.save_train_test_to_file('Fight_Winner')
 
 
 class StatsProcessor(Processor):
     def __init__(self):
         super().__init__(self)
         self.scaler_name = 'stats_scaler'
+        self.imputer_name = 'stats_imputer'
 
-    def read(self):
-        filepath = os.path.join(
-            self.base_dir, "Data", "Scraped_Data", "scraped_fighters.csv"
-        )
-        return pd.read_csv(filepath)
+        self.fight_stats_targets = ['pass_stat_f1', 'pass_stat_f2', 'str_stat_f1',
+                                    'str_stat_f2', 'sub_stat_f1', 'sub_stat_f2', 'td_stat_f1', 'td_stat_f2']
+
+    def set_targets(self):
+        self.targets = self.fight_bouts[self.fight_stats_targets]
+
+    def drop_targets_from_df(self):
+        self.fight_bouts.drop(columns=self.fight_stats_targets, inplace=True)
+
+    def split_data(self):
+        self.X_train, self.X_test, self.y_train, self.y_test = \
+            train_test_split(self.fight_bouts, self.targets.values,
+                             test_size=0.10, random_state=42)
+        
+    def main(self):
+        self.read()
+        self.drop_unused_columns()
+        self.set_targets()
+        self.drop_targets_from_df()
+        self.shuffle_winner_positions()
+        self.process_categorical_columns()
+        self.fight_bouts.drop(columns='winner', inplace=True)
+        self.impute()
+        self.scale()
+        self.split_data()
+        self.save_train_test_to_file('Fight_Stats')
 
 
 if __name__ == "__main__":
-    p = Processor()
-    p.main()
-    print(p.fight_bouts[0:10, :])
+    # p = Processor()
+    # p.main()
+    sp = StatsProcessor()
+    sp.main()
