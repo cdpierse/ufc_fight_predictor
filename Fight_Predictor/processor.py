@@ -1,10 +1,15 @@
+import datetime as dt
 import math
 import os
-import datetime as dt
+import re
+
+import joblib
 import numpy as np
 import pandas as pd
 from pandas.api.types import CategoricalDtype
-import re
+from sklearn.impute import SimpleImputer
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.preprocessing import RobustScaler
 
 pd.set_option("mode.chained_assignment", None)
 
@@ -35,6 +40,9 @@ class Processor:
             self.state = "train"
         else:
             self.state = "production"
+
+        self.scaler_name = 'win_scaler'
+        self.imputer_name = 'win_imputer'
         self.base_dir = os.path.join(os.getcwd(), "Fight_Predictor")
 
     def read(self):
@@ -169,8 +177,8 @@ class Processor:
                 self.categorical_data = self.categorical_data.join(
                     pd.get_dummies(self.categorical_data[stance], prefix=stance))
 
-            self.categorical_data = self.categorical_data.drop(
-                columns=['f1_stance', 'f2_stance', 'f1_dob', 'f2_dob', 'event_date'])
+            self.categorical_data.drop(
+                columns=['f1_stance', 'f2_stance', 'f1_dob', 'f2_dob', 'event_date'], inplace=True)
 
         def encode_fighters():
             self.categorical_data['winner'] = (
@@ -179,15 +187,15 @@ class Processor:
             self.categorical_data['fighter2'] = 1
 
         def rejoin_dataframes():
-            drop_columns = self.categorical_data.columns
-            [self.fight_bouts.drop(columns=[x],inplace =True)
-             for x in drop_columns if x in self.fight_bouts.columns]
-
             self.fight_bouts = pd.concat(
                 [self.fight_bouts, self.categorical_data], axis=1)
 
         self.categorical_data = self.fight_bouts.select_dtypes(
             include="object")
+
+        drop_columns = self.categorical_data.columns
+        [self.fight_bouts.drop(columns=[x], inplace=True)
+         for x in drop_columns if x in self.fight_bouts.columns]
 
         replace_dashes(columns_with_dashes)
         column_to_datetime(dateime_columns)
@@ -235,12 +243,14 @@ class Processor:
 
             win, loss, draw, nc = int(win), int(loss), int(draw), int(nc)
 
-            self.categorical_data.loc[self.record_index, prefix + '_win'] = win
+            self.categorical_data.loc[self.record_index,
+                                      prefix + '_win'] = win
             self.categorical_data.loc[self.record_index,
                                       prefix + '_loss'] = loss
             self.categorical_data.loc[self.record_index,
                                       prefix + '_draw'] = draw
-            self.categorical_data.loc[self.record_index, prefix + '_nc'] = nc
+            self.categorical_data.loc[self.record_index,
+                                      prefix + '_nc'] = nc
             self.categorical_data.loc[self.record_index,
                                       prefix + '_ratio'] = (win / (win + loss))
             self.record_index += 1
@@ -249,18 +259,84 @@ class Processor:
         [apply_split_record(r) for r in records]
 
         self.catergorical_data = self.categorical_data.drop(
-            columns=['f1_record', 'f2_record'], inplace=True)  # not working
+            columns=['f1_record', 'f2_record'], inplace=True)
+
+    def set_target(self):
+        self.target = self.fight_bouts.winner
+        self.fight_bouts = self.fight_bouts.drop(
+            columns=['winner'])
+
+    def impute(self):
+
+        def save(imputer):
+            file_dir = os.path.join(
+                self.base_dir, 'Files', 'Transformers', 'Imputers')
+            imputer_name = self.imputer_name + '.pkl'
+            joblib.dump(imputer, os.path.join(file_dir, imputer_name))
+
+        columns = self.fight_bouts.columns
+        imputer = SimpleImputer(strategy='most_frequent', copy=False)
+        imputer.fit(self.fight_bouts)
+        imputed_data = imputer.transform(self.fight_bouts)
+        save(imputer)
+
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+
+    def scale(self):
+
+        self.original_values = self.fight_bouts.values
+        self.feature_names = self.fight_bouts.columns
+
+        def save(scaler):
+            file_dir = os.path.join(
+                self.base_dir, 'Files', 'Transformers', 'Scalers')
+            scaler_name = self.scaler_name + '.pkl'
+            joblib.dump(scaler, os.path.join(file_dir, scaler_name))
+
+        scaler = RobustScaler()
+        scaler.fit(self.fight_bouts)
+        self.fight_bouts = scaler.transform(self.fight_bouts)
+        save(scaler)
+
+    def stratify_shuffle(self):
+        sss = StratifiedShuffleSplit(
+            n_splits=20, test_size=0.1, random_state=42)
+
+        for train_index, test_index in sss.split(self.fight_bouts, self.target):
+            X_train, X_test = self.fight_bouts[train_index], self.fight_bouts[test_index]
+            y_train, y_test = self.target[train_index], self.target[test_index]
+
+        self.X_train, self.y_train = X_train, y_train.values
+        self.X_test, self.y_test = X_test, y_test.values
+
+    def save_train_test_to_file(self):
+        save_loc = os.path.join(self.base_dir, 'Data',
+                                'Processed_Data', 'Fight_Winner')
+
+        np.savez_compressed(os.path.join(save_loc, 'winner_data'),
+                            x_train=self.X_train,
+                            y_train=self.y_train,
+                            x_test=self.X_test,
+                            y_test=self.y_test,
+                            original_values=self.original_values,
+                            feature_names=self.feature_names)
 
     def main(self):
         self.read()
         self.drop_unused_columns()
         self.shuffle_winner_positions()
         self.process_categorical_columns()
+        self.set_target()
+        self.impute()
+        self.scale()
+        self.stratify_shuffle()
+        self.save_train_test_to_file()
 
 
 class StatsProcessor(Processor):
     def __init__(self):
         super().__init__(self)
+        self.scaler_name = 'stats_scaler'
 
     def read(self):
         filepath = os.path.join(
@@ -272,3 +348,4 @@ class StatsProcessor(Processor):
 if __name__ == "__main__":
     p = Processor()
     p.main()
+    print(p.fight_bouts[0:10, :])
