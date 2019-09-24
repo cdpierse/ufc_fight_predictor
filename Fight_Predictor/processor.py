@@ -159,17 +159,17 @@ class Processor:
                 self.categorical_data[fighter_prefix + '_ageAtFight'] = (
                     self.categorical_data.event_date - self.categorical_data[fighter_prefix + '_dob']).dt.days
 
-        def parse_fighter_height(height):
-            if height:
-                if '"' in height:
-                    height = height.replace('"', '')
-                ht = height.split("' ")
-                ft = float(ht[0])
-                inch = float(ht[1])
+        # def parse_fighter_height(height):
+        #     if height:
+        #         if '"' in height:
+        #             height = height.replace('"', '')
+        #         ht = height.split("' ")
+        #         ft = float(ht[0])
+        #         inch = float(ht[1])
 
-                return (12 * ft) + inch
-            else:
-                pass
+        #         return (12 * ft) + inch
+        #     else:
+        #         print('No height given')
 
         def one_hot_encode_stances():
             stances = ['f1_stance', 'f2_stance']
@@ -209,11 +209,23 @@ class Processor:
         heights = ['f1_height', 'f2_height']
         for height in heights:
             self.categorical_data[height] = self.categorical_data[height].apply(
-                lambda x: parse_fighter_height(x))
+                lambda x: self.parse_fighter_height(x))
 
         one_hot_encode_stances()
         encode_fighters()
         rejoin_dataframes()
+
+    def parse_fighter_height(self, height):
+        if height:
+            if '"' in height:
+                height = height.replace('"', '')
+            ht = height.split("' ")
+            ft = float(ht[0])
+            inch = float(ht[1])
+
+            return (12 * ft) + inch
+        else:
+            pass
 
     def parse_fighter_records(self):
 
@@ -370,8 +382,69 @@ class StatsProcessor(Processor):
         self.save_train_test_to_file('Fight_Stats', self.fight_stats_targets)
 
 
+class ProductionProcessor(Processor):
+    """ Implementation of Processor for dealing with fight data that
+    needs to be processed for use in production/test situations.
+    """
+
+    def __init__(self, fight_bouts):
+        super().__init__()
+        self.fight_bouts = fight_bouts
+
+    def impute(self):
+        imputer_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Imputers',
+            self.imputer_name + '.pkl')
+        imputer = joblib.load(imputer_path)
+        imputed_data = imputer.transform(self.fight_bouts)
+
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+  
+    def scale(self):
+        scaler_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Scalers',
+            self.scaler_name + '.pkl')
+        scaler = joblib.load(scaler_path)
+        self.fight_bouts = scaler.transform(self.fight_bouts)
+
+    def main():
+        self.impute()
+        self.scale()
+        
+
+class ProductionStatsProcessor(StatsProcessor):
+
+    def __init__(self, fight_bouts):
+        super().__init__()
+        self.fight_bouts = fight_bouts
+        pass
+
+    def impute():
+        imputer_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Imputers',
+            self.imputer_name + '.pkl')
+        imputer = joblib.load(imputer_path)
+        imputed_data = imputer.transform(self.fight_bouts)
+
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+
+    def main(self):
+        pass
+
+
 if __name__ == "__main__":
-    p = Processor()
-    p.main()
-    sp = StatsProcessor()
-    sp.main()
+    # p = Processor()
+    # p.main()
+    # sp = StatsProcessor()
+    # sp.main()
+
+
