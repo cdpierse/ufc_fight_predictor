@@ -387,7 +387,7 @@ class ProductionProcessor(Processor):
     needs to be processed for use in production/test situations.
     """
 
-    def __init__(self, fight_bouts):
+    def __init__(self, fight_bouts = None):
         super().__init__()
         self.fight_bouts = fight_bouts
 
@@ -413,14 +413,14 @@ class ProductionProcessor(Processor):
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
 
-    def main():
-        self.impute()
-        self.scale()
+    # def main():
+    #     self.impute()
+    #     self.scale()
         
 
 class ProductionStatsProcessor(StatsProcessor):
 
-    def __init__(self, fight_bouts):
+    def __init__(self, fight_bouts = None):
         super().__init__()
         self.fight_bouts = fight_bouts
         pass
@@ -442,9 +442,8 @@ class ProductionStatsProcessor(StatsProcessor):
 
 
 if __name__ == "__main__":
+    pass
     # p = Processor()
     # p.main()
     # sp = StatsProcessor()
     # sp.main()
-
-
