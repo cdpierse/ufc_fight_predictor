@@ -88,7 +88,7 @@ class GetPredictions:
         """
         self.populate_fighter_df(fighter1, 'f1')
         self.populate_fighter_df(fighter2, 'f2')
-        self.prediction_df.weight_class =  weight_class
+        self.prediction_df.weight_class = weight_class
     
     def predict_bout_stats(self):
         scaled, self.prediction_df = self.process_fight()

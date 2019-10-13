@@ -367,7 +367,7 @@ class StatsProcessor(Processor):
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(self.fight_bouts, self.targets.values,
                              test_size=0.10, random_state=42)
-        
+
     def main(self):
         self.read()
         self.drop_unused_columns()
@@ -387,7 +387,7 @@ class ProductionProcessor(Processor):
     needs to be processed for use in production/test situations.
     """
 
-    def __init__(self, fight_bouts = None):
+    def __init__(self, fight_bouts=None):
         super().__init__()
         self.fight_bouts = fight_bouts
 
@@ -402,7 +402,7 @@ class ProductionProcessor(Processor):
         imputed_data = imputer.transform(self.fight_bouts)
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
-  
+
     def scale(self):
         scaler_path = os.path.join(
             self.base_dir,
@@ -416,11 +416,11 @@ class ProductionProcessor(Processor):
     # def main():
     #     self.impute()
     #     self.scale()
-        
+
 
 class ProductionStatsProcessor(StatsProcessor):
 
-    def __init__(self, fight_bouts = None):
+    def __init__(self, fight_bouts=None):
         super().__init__()
         self.fight_bouts = fight_bouts
         pass
@@ -436,6 +436,16 @@ class ProductionStatsProcessor(StatsProcessor):
         imputed_data = imputer.transform(self.fight_bouts)
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+
+    def scale():
+        scaler_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Scalers',
+            self.scaler_name + '.pkl')
+        scaler = joblib.load(scaler_path)
+        self.fight_bouts = scaler.transform(self.fight_bouts)
 
     def main(self):
         pass
