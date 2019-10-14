@@ -145,12 +145,6 @@ class Processor:
                     self.categorical_data[column]
                 )
 
-        def make_weight_classes_ordinal():
-            self.categorical_data["weight_class"] = self.categorical_data.weight_class.astype(
-                CategoricalDtype(
-                    categories=ORDERED_WEIGHT_CLASSES, ordered=True)
-            ).cat.codes
-
         def calculate_age_at_fight(fighter_prefix):
             if self.state == 'production':
                 self.categorical_data[fighter_prefix + '_ageAtFight'] = (
@@ -199,7 +193,6 @@ class Processor:
 
         replace_dashes(columns_with_dashes)
         column_to_datetime(dateime_columns)
-        make_weight_classes_ordinal()
 
         fighter_prefixes = ['f1', 'f2']
         [calculate_age_at_fight(f) for f in fighter_prefixes]
@@ -425,7 +418,7 @@ class ProductionStatsProcessor(StatsProcessor):
         self.fight_bouts = fight_bouts
         pass
 
-    def impute():
+    def impute(self):
         imputer_path = os.path.join(
             self.base_dir,
             'Files',
@@ -437,7 +430,7 @@ class ProductionStatsProcessor(StatsProcessor):
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
 
-    def scale():
+    def scale(self):
         scaler_path = os.path.join(
             self.base_dir,
             'Files',
@@ -446,14 +439,22 @@ class ProductionStatsProcessor(StatsProcessor):
             self.scaler_name + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
-
+    
     def main(self):
-        pass
+        self.drop_unused_columns()
+        self.set_targets()
+        self.drop_targets_from_df()
+        self.shuffle_winner_positions()
+        self.process_categorical_columns()
+        self.fight_bouts.drop(columns='winner', inplace=True)
+        self.impute()
+        self.scale()
+
+
 
 
 if __name__ == "__main__":
-    pass
-    # p = Processor()
-    # p.main()
-    # sp = StatsProcessor()
-    # sp.main()
+    p = Processor()
+    p.main()
+    sp = StatsProcessor()
+    sp.main()

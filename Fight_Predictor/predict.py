@@ -8,13 +8,14 @@ import numpy as np
 
 
 class Predict:
-
+ 
     def __init__(self, stats_model=None, winner_model=None):
         # the above params are not yet coded.
         self.pp = ProductionProcessor()
         self.get_fighters()
         self.set_feature_names()
-        self.stats_prediction_df = pd.DataFrame(columns=self.stats_feature_names)
+        self.stats_prediction_df = pd.DataFrame(
+            columns=self.stats_feature_names)
 
         self.pp.read()
 
@@ -41,22 +42,16 @@ class Predict:
     def get_fighter_pair_stats(self, pair):
         self.f1_stats = self.get_fighter_data(pair[0])
         self.f2_stats = self.get_fighter_data(pair[1])
-        # if isinstance(fighter_pairs, list):
-        #     for pairing in fighter_pairs:
-        #         self.f1_stats = self.get_fighter_data(pairing[0])
-        #         self.f2_stats = self.get_fighter_data(pairing[1])
-
-        # else:
-        #     print('fighter_pairs is not list')
 
     def create_stats_df(self, fighter_pairs):
         if isinstance(fighter_pairs, list):
             for pair in fighter_pairs:
                 self.get_fighter_pair_stats(pair)
                 prefixes = ['f1', 'f2']
-                temp_df = pd.DataFrame(columns=self.stats_prediction_df.columns)
+                temp_df = pd.DataFrame(
+                    columns=self.stats_prediction_df.columns)
 
-                for prefix in prefixes:            
+                for prefix in prefixes:
                     stats_df_mapping = {
                         'date_of_birth': prefix + '_dob',
                         'fighter_record': prefix + '_record',
@@ -79,15 +74,22 @@ class Predict:
                             temp_df[v] = self.f1_stats[k].values
                         else:
                             temp_df[v] = self.f2_stats[k].values
-                self.stats_prediction_df = self.stats_prediction_df.append(temp_df, ignore_index=True)
-                print(self.stats_prediction_df)
+                self.stats_prediction_df = self.stats_prediction_df.append(
+                    temp_df, ignore_index=True)
         else:
-                print('fighter_pairs is not of type <list>')
+            print('fighter_pairs is not of type <list>')
+
+    def process_stats_df(self):
+        psp = ProductionStatsProcessor(fight_bouts=self.stats_prediction_df)
+        psp.main()
 
 
 p = Predict()
-fight_pair = [('Conor McGregor', 'Nate Diaz'), ('Daniel Cormier', 'Conor McGregor')]
-#p.get_fighter_pair_stats(fight_pair)
+fight_pair = [('Conor McGregor', 'Nate Diaz'),
+              ('Daniel Cormier', 'Conor McGregor')]
+# p.get_fighter_pair_stats(fight_pair)
 p.create_stats_df(fight_pair)
+#p.process_stats_df()
+print(p.stats_prediction_df)
 # print(p.get_fighter_data('Conor McGregor'))
 # print(p.stats_feature_names)
