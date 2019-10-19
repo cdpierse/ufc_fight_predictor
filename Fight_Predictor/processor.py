@@ -14,33 +14,9 @@ from sklearn.preprocessing import RobustScaler
 pd.set_option("mode.chained_assignment", None)
 
 
-ORDERED_WEIGHT_CLASSES = [
-    "Women's Strawweight",
-    "Women's Flyweight",
-    "Women's Bantamweight",
-    "Women's Featherweight",
-    "Flyweight",
-    "Bantamweight",
-    "Featherweight",
-    "Lightweight",
-    "Welterweight",
-    "Middleweight",
-    "Light Heavyweight",
-    "Heavyweight",
-    "Super Heavyweight",
-    "Open Weight",
-    "Catch Weight",
-]
-
-
 class Processor:
 
-    def __init__(self, state=None):
-        if state is None:
-            self.state = "train"
-        else:
-            self.state = "production"
-
+    def __init__(self):
         self.scaler_name = 'win_scaler'
         self.imputer_name = 'win_imputer'
         self.base_dir = os.path.join(os.getcwd(), "Fight_Predictor")
@@ -129,10 +105,14 @@ class Processor:
             fighter1_col_index, fighter2_col_index, fight_bouts_copy
         )
 
-    def process_categorical_columns(self):
+    def process_categorical_columns(self, state='training'):
 
         columns_with_dashes = ["f1_dob", "f2_dob", "f1_height", "f2_height"]
-        dateime_columns = ["event_date", "f1_dob", "f2_dob"]
+
+        if state == 'production':
+            dateime_columns = ["f1_dob", "f2_dob"]
+        else:
+            dateime_columns = ["event_date", "f1_dob", "f2_dob"]
 
         def replace_dashes(columns):
             for column in columns:
@@ -146,33 +126,64 @@ class Processor:
                 )
 
         def calculate_age_at_fight(fighter_prefix):
-            if self.state == 'production':
+            if state == 'production':
                 self.categorical_data[fighter_prefix + '_ageAtFight'] = (
-                    dt.datetime.now() - self.categorical_data[fighter_prefix + '_dob']).dt.days
+                    dt.datetime.now() - self.categorical_data[fighter_prefix + '_dob']).dt.days / 365.5
             else:
                 self.categorical_data[fighter_prefix + '_ageAtFight'] = (
-                    self.categorical_data.event_date - self.categorical_data[fighter_prefix + '_dob']).dt.days
-
-        # def parse_fighter_height(height):
-        #     if height:
-        #         if '"' in height:
-        #             height = height.replace('"', '')
-        #         ht = height.split("' ")
-        #         ft = float(ht[0])
-        #         inch = float(ht[1])
-
-        #         return (12 * ft) + inch
-        #     else:
-        #         print('No height given')
+                    self.categorical_data.event_date - self.categorical_data[fighter_prefix + '_dob']).dt.days / 365.5
 
         def one_hot_encode_stances():
-            stances = ['f1_stance', 'f2_stance']
-            for stance in stances:
-                self.categorical_data = self.categorical_data.join(
-                    pd.get_dummies(self.categorical_data[stance], prefix=stance))
+            if state == 'production':
+                f1_stances = self.categorical_data.f1_stance.values
+                f2_stances = self.categorical_data.f2_stance.values
+                self.categorical_data.drop(
+                    columns=['f1_stance', 'f2_stance', 'f1_dob', 'f2_dob'], inplace=True)
+                stance_cols = [col for col in self.categorical_data.columns if 'stance' in col]
+                assign_correct_stance_production(f1_stances, f2_stances, stance_cols)
+            else:
 
-            self.categorical_data.drop(
-                columns=['f1_stance', 'f2_stance', 'f1_dob', 'f2_dob', 'event_date'], inplace=True)
+                stances = ['f1_stance', 'f2_stance']
+                for stance in stances:
+                    self.categorical_data = self.categorical_data.join(
+                        pd.get_dummies(self.categorical_data[stance], prefix=stance))
+                     
+                self.categorical_data.drop(
+                    columns=['f1_stance', 'f2_stance', 'f1_dob', 'f2_dob', 'event_date'], inplace=True)
+
+        def assign_correct_stance_production(f1_stances, f2_stances, stance_cols):
+            for i, (f1_stance, f2_stance) in enumerate(zip(f1_stances, f2_stances)):
+                matched_f1_stance = match_stance(f1_stance, stance_cols, 'f1')
+                matched_f2_stance = match_stance(f2_stance, stance_cols, 'f2')
+                if matched_f1_stance is not None:  # if a column was returned
+                    self.categorical_data.loc[i, matched_f1_stance] = 1
+                    temp_stance_cols = stance_cols.copy()
+                    temp_stance_cols.remove(matched_f1_stance)
+                    for col in temp_stance_cols[:]:
+                        if 'f2' in col:
+                            temp_stance_cols.remove(col)
+                    self.categorical_data.loc[i, temp_stance_cols] = 0
+                    
+                else:  # otherwise set all cols in that row to 0 
+                    self.categorical_data.loc[i, stance_cols] = 0
+
+                if matched_f2_stance is not None:
+                    self.categorical_data.loc[i, matched_f2_stance] = 1
+                    temp_stance_cols = stance_cols.copy()
+                    temp_stance_cols.remove(matched_f2_stance)
+                    for col in temp_stance_cols[:]:
+                        if 'f1' in col:
+                            temp_stance_cols.remove(col)
+                    self.categorical_data.loc[i, temp_stance_cols] = 0
+  
+                else:
+                    self.categorical_data.loc[i, stance_cols] = 0
+  
+        def match_stance(stance, stance_cols, prefix):
+            for col in stance_cols:
+                temp_col = col.replace("_", " ").lower()
+                if stance.lower() in temp_col and prefix in temp_col:
+                    return col
 
         def encode_fighters():
             self.categorical_data['winner'] = (
@@ -205,7 +216,8 @@ class Processor:
                 lambda x: self.parse_fighter_height(x))
 
         one_hot_encode_stances()
-        encode_fighters()
+        if state != 'production':
+            encode_fighters()
         rejoin_dataframes()
 
     def parse_fighter_height(self, height):
@@ -343,7 +355,7 @@ class Processor:
 
 class StatsProcessor(Processor):
     def __init__(self):
-        super().__init__(self)
+        super().__init__()
         self.scaler_name = 'stats_scaler'
         self.imputer_name = 'stats_imputer'
 
@@ -394,7 +406,7 @@ class ProductionProcessor(Processor):
         imputer = joblib.load(imputer_path)
         imputed_data = imputer.transform(self.fight_bouts)
 
-        self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
 
     def scale(self):
         scaler_path = os.path.join(
@@ -416,7 +428,6 @@ class ProductionStatsProcessor(StatsProcessor):
     def __init__(self, fight_bouts=None):
         super().__init__()
         self.fight_bouts = fight_bouts
-        pass
 
     def impute(self):
         imputer_path = os.path.join(
@@ -428,7 +439,7 @@ class ProductionStatsProcessor(StatsProcessor):
         imputer = joblib.load(imputer_path)
         imputed_data = imputer.transform(self.fight_bouts)
 
-        self.fight_bouts = pd.DataFrame(imputed_data, columns=columns)
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
 
     def scale(self):
         scaler_path = os.path.join(
@@ -439,18 +450,12 @@ class ProductionStatsProcessor(StatsProcessor):
             self.scaler_name + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
-    
+
     def main(self):
         self.drop_unused_columns()
-        self.set_targets()
-        self.drop_targets_from_df()
-        self.shuffle_winner_positions()
-        self.process_categorical_columns()
-        self.fight_bouts.drop(columns='winner', inplace=True)
+        self.process_categorical_columns(state='production')
         self.impute()
-        self.scale()
-
-
+        #self.scale()
 
 
 if __name__ == "__main__":

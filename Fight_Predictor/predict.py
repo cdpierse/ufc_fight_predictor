@@ -8,20 +8,18 @@ import numpy as np
 
 
 class Predict:
- 
+
     def __init__(self, stats_model=None, winner_model=None):
         # the above params are not yet coded.
-        self.pp = ProductionProcessor()
         self.get_fighters()
         self.set_feature_names()
         self.stats_prediction_df = pd.DataFrame(
             columns=self.stats_feature_names)
 
-        self.pp.read()
-
     def get_fighters(self):
+        " Loads the scraped_fighters csv file into a dataframe "
         filedir = os.path.join(
-            os.getcwd(), 'Fight_Predictor', 'Data', 'Scraped_Data', 'scraped_fighters.csv')
+            'Fight_Predictor', 'Data', 'Scraped_Data', 'scraped_fighters.csv')
         try:
             self.fighters = pd.read_csv(filedir)
         except:
@@ -37,6 +35,7 @@ class Predict:
         self.stats_target_names = np.load(stats_dir)['fight_stats_columns']
 
     def get_fighter_data(self, fighter_name):
+        " Returns matched fighter career stats for a given fighter name from scraped_fighters.csv"
         return self.fighters[self.fighters.fighter_name == fighter_name]
 
     def get_fighter_pair_stats(self, pair):
@@ -44,14 +43,18 @@ class Predict:
         self.f2_stats = self.get_fighter_data(pair[1])
 
     def create_stats_df(self, fighter_pairs):
+        "Takes a list of fighter name tuples and builds up a dataframe where each row represents a bout to predicted"
         if isinstance(fighter_pairs, list):
             for pair in fighter_pairs:
+                # dynamically resets f1 and f2 stats for each pair
                 self.get_fighter_pair_stats(pair)
                 prefixes = ['f1', 'f2']
+                columns = list(self.stats_prediction_df.columns)
                 temp_df = pd.DataFrame(
-                    columns=self.stats_prediction_df.columns)
+                    columns=columns)
 
                 for prefix in prefixes:
+                    # explicit mapping of features from self.fighters to their fight_bout counterparts
                     stats_df_mapping = {
                         'date_of_birth': prefix + '_dob',
                         'fighter_record': prefix + '_record',
@@ -75,21 +78,24 @@ class Predict:
                         else:
                             temp_df[v] = self.f2_stats[k].values
                 self.stats_prediction_df = self.stats_prediction_df.append(
-                    temp_df, ignore_index=True)
+                    temp_df, ignore_index=True, sort=False)
+
         else:
             print('fighter_pairs is not of type <list>')
 
     def process_stats_df(self):
         psp = ProductionStatsProcessor(fight_bouts=self.stats_prediction_df)
         psp.main()
+        self.stats_prediction_df = psp.fight_bouts
+        for col in list(self.stats_prediction_df.columns):
+            if col not in self.stats_feature_names:
+                print(f'column {col} not in predict df')
 
 
-p = Predict()
-fight_pair = [('Conor McGregor', 'Nate Diaz'),
-              ('Daniel Cormier', 'Conor McGregor')]
-# p.get_fighter_pair_stats(fight_pair)
-p.create_stats_df(fight_pair)
-#p.process_stats_df()
-print(p.stats_prediction_df)
-# print(p.get_fighter_data('Conor McGregor'))
-# print(p.stats_feature_names)
+if __name__ == "__main__":
+    p = Predict()
+    fight_pair = [('Conor McGregor', 'Nate Diaz'),
+                  ('Daniel Cormier', 'Conor McGregor'),
+                  ('Jon Jones', 'Daniel Cormier')]
+    p.create_stats_df(fight_pair)
+    p.process_stats_df()
