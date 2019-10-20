@@ -69,7 +69,7 @@ def fight_stats_model():
     model.add(Dense(hidden1, input_dim=x_train.shape[1], activation='relu',
                     kernel_initializer='normal', kernel_regularizer=l2_reg))
     model.add(Dropout(dropout))
-    model.add(Dense(y_train.shape[1]))
+    model.add(Dense(y_train.shape[1], activation='relu')) # relu here prevents negative output values 
 
     model.compile(
         loss='logcosh',
@@ -106,5 +106,5 @@ def save(model, save_name):
     model.save(save_loc)
 
 
-winner_model()
+#winner_model()
 fight_stats_model()

@@ -9,7 +9,7 @@ import pandas as pd
 from pandas.api.types import CategoricalDtype
 from sklearn.impute import SimpleImputer
 from sklearn.model_selection import StratifiedShuffleSplit, train_test_split
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import RobustScaler, StandardScaler, MinMaxScaler
 
 pd.set_option("mode.chained_assignment", None)
 
@@ -303,7 +303,7 @@ class Processor:
     def scale(self):
 
         self.original_values = self.fight_bouts.values
-        self.feature_names = self.fight_bouts.columns
+        self.feature_names = self.fight_bouts.columns.tolist()
 
         def save(scaler):
             file_dir = os.path.join(
@@ -311,7 +311,7 @@ class Processor:
             scaler_name = self.scaler_name + '.pkl'
             joblib.dump(scaler, os.path.join(file_dir, scaler_name))
 
-        scaler = RobustScaler()
+        scaler = StandardScaler()
         scaler.fit(self.fight_bouts)
         self.fight_bouts = scaler.transform(self.fight_bouts)
         save(scaler)
@@ -331,7 +331,7 @@ class Processor:
         save_loc = os.path.join(self.base_dir, 'Data',
                                 'Processed_Data', folder)
         print(f'saving at {save_loc}')
-
+        print(self.feature_names)
         np.savez_compressed(os.path.join(save_loc, 'data'),
                             x_train=self.X_train,
                             y_train=self.y_train,
@@ -395,7 +395,7 @@ class ProductionProcessor(Processor):
     def __init__(self, fight_bouts=None):
         super().__init__()
         self.fight_bouts = fight_bouts
-
+        
     def impute(self):
         imputer_path = os.path.join(
             self.base_dir,
@@ -417,17 +417,14 @@ class ProductionProcessor(Processor):
             self.scaler_name + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
-
-    # def main():
-    #     self.impute()
-    #     self.scale()
 
 
 class ProductionStatsProcessor(StatsProcessor):
 
-    def __init__(self, fight_bouts=None):
+    def __init__(self, fight_bouts, columns):
         super().__init__()
         self.fight_bouts = fight_bouts
+        self.columns = columns
 
     def impute(self):
         imputer_path = os.path.join(
@@ -438,6 +435,7 @@ class ProductionStatsProcessor(StatsProcessor):
             self.imputer_name + '.pkl')
         imputer = joblib.load(imputer_path)
         imputed_data = imputer.transform(self.fight_bouts)
+
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
 
@@ -450,12 +448,16 @@ class ProductionStatsProcessor(StatsProcessor):
             self.scaler_name + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
+    
+    def reindex(self):
+        self.fight_bouts = self.fight_bouts.reindex(columns=self.columns)
 
     def main(self):
         self.drop_unused_columns()
         self.process_categorical_columns(state='production')
+        self.reindex()
         self.impute()
-        #self.scale()
+        self.scale()
 
 
 if __name__ == "__main__":
