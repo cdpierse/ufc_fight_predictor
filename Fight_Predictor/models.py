@@ -106,5 +106,5 @@ def save(model, save_name):
     model.save(save_loc)
 
 
-#winner_model()
+winner_model()
 fight_stats_model()

@@ -311,7 +311,7 @@ class Processor:
             scaler_name = self.scaler_name + '.pkl'
             joblib.dump(scaler, os.path.join(file_dir, scaler_name))
 
-        scaler = StandardScaler()
+        scaler = RobustScaler()
         scaler.fit(self.fight_bouts)
         self.fight_bouts = scaler.transform(self.fight_bouts)
         save(scaler)
@@ -331,7 +331,6 @@ class Processor:
         save_loc = os.path.join(self.base_dir, 'Data',
                                 'Processed_Data', folder)
         print(f'saving at {save_loc}')
-        print(self.feature_names)
         np.savez_compressed(os.path.join(save_loc, 'data'),
                             x_train=self.X_train,
                             y_train=self.y_train,
@@ -392,9 +391,10 @@ class ProductionProcessor(Processor):
     needs to be processed for use in production/test situations.
     """
 
-    def __init__(self, fight_bouts=None):
+    def __init__(self, fight_bouts, columns):
         super().__init__()
         self.fight_bouts = fight_bouts
+        self.columns = columns
         
     def impute(self):
         imputer_path = os.path.join(
@@ -417,6 +417,15 @@ class ProductionProcessor(Processor):
             self.scaler_name + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
+    
+    def reindex(self):
+        self.fight_bouts = self.fight_bouts.reindex(columns=self.columns)
+    
+    def main(self):
+        self.reindex()
+        self.impute()
+        self.scale()
+
 
 
 class ProductionStatsProcessor(StatsProcessor):
@@ -435,7 +444,6 @@ class ProductionStatsProcessor(StatsProcessor):
             self.imputer_name + '.pkl')
         imputer = joblib.load(imputer_path)
         imputed_data = imputer.transform(self.fight_bouts)
-
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
 
@@ -457,6 +465,7 @@ class ProductionStatsProcessor(StatsProcessor):
         self.process_categorical_columns(state='production')
         self.reindex()
         self.impute()
+        self.unscaled_df = self.fight_bouts.copy()
         self.scale()
 
 
