@@ -7,6 +7,7 @@ import sys
 import numpy as np
 
 
+
 class PreparePredictions:
 
     def __init__(self):
@@ -116,35 +117,50 @@ class Predict:
         self.fighter_pairs = fighter_pairs
         self.reversed_pairs = []
         self.reverse_fight_pairs()
+        self.get_average_predictions()
 
     def predict_stats(self, array):
         return self.stats_model.predict(array)
 
     def predict_winner(self, array):
         return self.winner_model.predict(array)
-        
+
     def reverse_fight_pairs(self):
         for pair in self.fighter_pairs:
             self.reversed_pairs.append((pair[1], pair[0]))
 
     # predicts stats for both orderings of the df
     def get_average_predictions(self):
-        pp = PreparePredictions()
-        stats_arr1 = pp.create_stats_df(self.fighter_pairs)
-        stats_preds = self.predict_stats(stats_arr1)
-        pp.create_winner_df(stats_preds)
-        pp.process_winner_df()
-        winner_preds1 = self.predict_winner(pp.winner_df)
-        
-        pp_reverse = PreparePredictions()
-        stats_arr1 = pp_reverse.create_stats_df(self.reversed_pairs)
-        stats_preds = self.predict_stats(stats_arr1)
-        pp_reverse.create_winner_df(stats_preds)
-        pp_reverse.process_winner_df()
-        winner_preds2 = self.predict_winner(pp_reverse.winner_df)
 
-        print(self.create_abs_probability_array(winner_preds1))
-        print(self.create_abs_probability_array(winner_preds2))
+        winner_preds = self.get_predictions(self.fighter_pairs)
+        reversed_winner_preds = self.get_predictions(self.reversed_pairs)
+
+        winner_preds = self.create_abs_probability_array(winner_preds)
+        reversed_winner_preds = self.create_abs_probability_array(reversed_winner_preds)
+
+        final_winners_predicted = []
+        for i, (pair1, pair2) in enumerate(zip(self.fighter_pairs, self.reversed_pairs)):
+            # if it selects the same fighter each time that fighter is the predicted winner
+            if winner_preds[i][0] is 'fighter1' and reversed_winner_preds[i][0] is 'fighter2': 
+                avg_prob = np.mean([winner_preds[i][1], reversed_winner_preds[i][1]])
+                final_winners_predicted.append((pair1[0], avg_prob))
+            else:  # two different winners have been selected, return winner w/ highest prob
+                if winner_preds[i][1] > reversed_winner_preds[i][1]:
+                    final_winners_predicted.append((pair1[0], winner_preds[i][1]))
+                elif winner_preds[i][1] < reversed_winner_preds[i][1]:
+                    final_winners_predicted.append((pair2[0], reversed_winner_preds[i][1]))
+                elif winner_preds[i][1] == reversed_winner_preds[i][1]:
+                    final_winners_predicted.append(((pair1[0], pair2[0]), 'Draw'))
+        self.predictions = final_winners_predicted
+ 
+    def get_predictions(self, fighter_pairs):
+        pp = PreparePredictions()
+        stats_data = pp.create_stats_df(fighter_pairs)
+        stats_predictions = self.predict_stats(stats_data)
+        pp.create_winner_df(stats_predictions)
+        pp.process_winner_df()
+        winner_predictions = self.predict_winner(pp.winner_df)
+        return winner_predictions
 
     def create_abs_probability_array(self, predictions):
         abs_probs = []
@@ -159,21 +175,14 @@ class Predict:
         return abs_probs
 
 
-
 if __name__ == "__main__":
     base_dir = os.path.join(os.getcwd(), 'Fight_Predictor', 'Files', 'Models')
     stats_model = keras.models.load_model(os.path.join(
         base_dir, 'stats_model.h5'), custom_objects={'r2': r2})
     winner_model = keras.models.load_model(os.path.join(
         base_dir, 'winner_model.h5'))
-    
-    # p = PreparePredictions(stats_model)
-    fight_pair = [('Anthony Pettis', 'Yoel Romero')]
-    # p.create_stats_df(fight_pair)
+
+    fight_pair = [('Ben Askren', 'Jorge Masvidal'),
+                 ('Daniel Cormier', 'Conor McGregor')]
     p = Predict(fight_pair, stats_model, winner_model)
-    p.get_average_predictions()
-    # p.reverse_fight_pairs()
-    # p.get_average_predictions()
-    # pp = PreparePredictions()
-    # pp.create_stats_df(fight_pair)
-    # pp.create_winner_df()
+    print(p.predictions)
