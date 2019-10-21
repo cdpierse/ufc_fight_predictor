@@ -396,78 +396,65 @@ class ProductionProcessor(Processor):
         self.fight_bouts = fight_bouts
         self.columns = columns
         
-    def impute(self):
+    def win_impute(self):
         imputer_path = os.path.join(
             self.base_dir,
             'Files',
             'Transformers',
             'Imputers',
-            self.imputer_name + '.pkl')
+            'win_imputer' + '.pkl')
         imputer = joblib.load(imputer_path)
         imputed_data = imputer.transform(self.fight_bouts)
 
         self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
 
-    def scale(self):
+    def win_scale(self):
         scaler_path = os.path.join(
             self.base_dir,
             'Files',
             'Transformers',
             'Scalers',
-            self.scaler_name + '.pkl')
+            'win_scaler' + '.pkl')
+        scaler = joblib.load(scaler_path)
+        self.fight_bouts = scaler.transform(self.fight_bouts)
+    
+    def stats_impute(self):
+        imputer_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Imputers',
+            'stats_imputer' + '.pkl')
+        imputer = joblib.load(imputer_path)
+        imputed_data = imputer.transform(self.fight_bouts)
+
+        self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
+
+    def stats_scale(self):
+        scaler_path = os.path.join(
+            self.base_dir,
+            'Files',
+            'Transformers',
+            'Scalers',
+            'stats_scaler' + '.pkl')
         scaler = joblib.load(scaler_path)
         self.fight_bouts = scaler.transform(self.fight_bouts)
     
     def reindex(self):
         self.fight_bouts = self.fight_bouts.reindex(columns=self.columns)
     
-    def main(self):
+    def winner_main(self):
         self.reindex()
-        self.impute()
-        self.scale()
-
-
-
-class ProductionStatsProcessor(StatsProcessor):
-
-    def __init__(self, fight_bouts, columns):
-        super().__init__()
-        self.fight_bouts = fight_bouts
-        self.columns = columns
-
-    def impute(self):
-        imputer_path = os.path.join(
-            self.base_dir,
-            'Files',
-            'Transformers',
-            'Imputers',
-            self.imputer_name + '.pkl')
-        imputer = joblib.load(imputer_path)
-        imputed_data = imputer.transform(self.fight_bouts)
-
-        self.fight_bouts = pd.DataFrame(imputed_data, columns=self.fight_bouts.columns)
-
-    def scale(self):
-        scaler_path = os.path.join(
-            self.base_dir,
-            'Files',
-            'Transformers',
-            'Scalers',
-            self.scaler_name + '.pkl')
-        scaler = joblib.load(scaler_path)
-        self.fight_bouts = scaler.transform(self.fight_bouts)
+        self.win_impute()
+        self.win_scale()
     
-    def reindex(self):
-        self.fight_bouts = self.fight_bouts.reindex(columns=self.columns)
-
-    def main(self):
+    def stats_main(self):
         self.drop_unused_columns()
         self.process_categorical_columns(state='production')
         self.reindex()
-        self.impute()
+        self.stats_impute()
         self.unscaled_df = self.fight_bouts.copy()
-        self.scale()
-
+        self.stats_scale()
 
 if __name__ == "__main__":
     p = Processor()

@@ -1,6 +1,6 @@
 import os
 import pandas as pd
-from processor import ProductionProcessor, ProductionStatsProcessor
+from processor import ProductionProcessor
 from utils import r2
 from tensorflow import keras
 import sys
@@ -89,11 +89,11 @@ class PreparePredictions:
         return self.stats_prediction_df
 
     def process_stats_df(self):
-        psp = ProductionStatsProcessor(
+        pp = ProductionProcessor(
             fight_bouts=self.stats_prediction_df, columns=self.stats_feature_names)
-        psp.main()
-        self.unscaled_stats_df = psp.unscaled_df
-        self.stats_prediction_df = psp.fight_bouts
+        pp.stats_main()
+        self.unscaled_stats_df = pp.unscaled_df
+        self.stats_prediction_df = pp.fight_bouts
 
     def create_winner_df(self, predictions):
         predicted_stats = pd.DataFrame(
@@ -104,7 +104,7 @@ class PreparePredictions:
     def process_winner_df(self):
         pp = ProductionProcessor(
             fight_bouts=self.winner_df, columns=self.winner_feature_names)
-        pp.main()
+        pp.winner_main()
         self.winner_df = pp.fight_bouts
 
 
@@ -168,8 +168,7 @@ if __name__ == "__main__":
         base_dir, 'winner_model.h5'))
     
     # p = PreparePredictions(stats_model)
-    fight_pair = [('Nate Diaz', 'Ronda Rousey'),
-                  ('Ben Askren', 'Jorge Masvidal')]
+    fight_pair = [('Anthony Pettis', 'Yoel Romero')]
     # p.create_stats_df(fight_pair)
     p = Predict(fight_pair, stats_model, winner_model)
     p.get_average_predictions()
