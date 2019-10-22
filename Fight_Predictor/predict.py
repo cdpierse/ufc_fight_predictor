@@ -1,11 +1,12 @@
 import os
+import sys
+
+import numpy as np
 import pandas as pd
+from tensorflow import keras
+
 from processor import ProductionProcessor
 from utils import r2
-from tensorflow import keras
-import sys
-import numpy as np
-
 
 
 class PreparePredictions:
@@ -136,23 +137,28 @@ class Predict:
         reversed_winner_preds = self.get_predictions(self.reversed_pairs)
 
         winner_preds = self.create_abs_probability_array(winner_preds)
-        reversed_winner_preds = self.create_abs_probability_array(reversed_winner_preds)
+        reversed_winner_preds = self.create_abs_probability_array(
+            reversed_winner_preds)
 
         final_winners_predicted = []
         for i, (pair1, pair2) in enumerate(zip(self.fighter_pairs, self.reversed_pairs)):
             # if it selects the same fighter each time that fighter is the predicted winner
-            if winner_preds[i][0] is 'fighter1' and reversed_winner_preds[i][0] is 'fighter2': 
-                avg_prob = np.mean([winner_preds[i][1], reversed_winner_preds[i][1]])
+            if winner_preds[i][0] is 'fighter1' and reversed_winner_preds[i][0] is 'fighter2':
+                avg_prob = np.mean(
+                    [winner_preds[i][1], reversed_winner_preds[i][1]])
                 final_winners_predicted.append((pair1[0], avg_prob))
             else:  # two different winners have been selected, return winner w/ highest prob
                 if winner_preds[i][1] > reversed_winner_preds[i][1]:
-                    final_winners_predicted.append((pair1[0], winner_preds[i][1]))
+                    final_winners_predicted.append(
+                        (pair1[0], winner_preds[i][1]))
                 elif winner_preds[i][1] < reversed_winner_preds[i][1]:
-                    final_winners_predicted.append((pair2[0], reversed_winner_preds[i][1]))
+                    final_winners_predicted.append(
+                        (pair2[0], reversed_winner_preds[i][1]))
                 elif winner_preds[i][1] == reversed_winner_preds[i][1]:
-                    final_winners_predicted.append(((pair1[0], pair2[0]), 'Draw'))
+                    final_winners_predicted.append(
+                        ((pair1[0], pair2[0]), 'Draw'))
         self.predictions = final_winners_predicted
- 
+
     def get_predictions(self, fighter_pairs):
         pp = PreparePredictions()
         stats_data = pp.create_stats_df(fighter_pairs)
@@ -183,6 +189,6 @@ if __name__ == "__main__":
         base_dir, 'winner_model.h5'))
 
     fight_pair = [('Ben Askren', 'Jorge Masvidal'),
-                 ('Daniel Cormier', 'Conor McGregor')]
+                  ('Ronda Rousey', 'Conor McGregor')]
     p = Predict(fight_pair, stats_model, winner_model)
     print(p.predictions)
