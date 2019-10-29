@@ -1,4 +1,4 @@
-name: base
+name: fight-predictor
 channels:
   - conda-forge
   - defaults

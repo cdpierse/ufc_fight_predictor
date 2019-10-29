@@ -19,14 +19,11 @@ def main():
         base_dir, 'winner_model.h5'))
 
     fight_pair = request.json['data']
-    print(fight_pair)
     fighter1, fighter2 = fight_pair['fighter1'], fight_pair['fighter2']
     prediction_tuple = [(fighter1, fighter2)]
-    print(prediction_tuple)
     p = Predict(prediction_tuple, stats_model, winner_model)
     raw_response = p.predictions[0]
-    response = (str(raw_response[0]), str(raw_response[1]))
-    print(response)
+    response = f'{str(raw_response[0]), str(float(raw_response[1]))}'
     return response
 
 if __name__ == "__main__":
