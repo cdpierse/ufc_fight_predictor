@@ -12,13 +12,16 @@ CORS(app)
 
 @app.route("/fight-predictor/api/v1.0/predict", methods=['POST'])
 def main():
-    base_dir = os.path.join(os.getcwd(), 'Fight_Predictor', 'Files', 'Models')
+    print(os.getcwd())
+    base_dir = os.path.join(os.getcwd(),'Fight_Predictor', 'Files', 'Models')
     stats_model = keras.models.load_model(os.path.join(
         base_dir, 'stats_model.h5'), custom_objects={'r2': r2})
     winner_model = keras.models.load_model(os.path.join(
         base_dir, 'winner_model.h5'))
+    print(request.json['data'])
 
     fight_pair = request.json['data']
+    print(f'the fight_pair is {fight_pair}')
     fighter1, fighter2 = fight_pair['fighter1'], fight_pair['fighter2']
     prediction_tuple = [(fighter1, fighter2)]
     p = Predict(prediction_tuple, stats_model, winner_model)
