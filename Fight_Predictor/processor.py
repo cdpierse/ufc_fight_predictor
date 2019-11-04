@@ -166,6 +166,7 @@ class Processor:
                     
                 else:  # otherwise set all cols in that row to 0 
                     self.categorical_data.loc[i, stance_cols] = 0
+                    self.categorical_data.loc[i, ['f1_stance_Orthodox']] = 1  # give them orthodox stance by default
 
                 if matched_f2_stance is not None:
                     self.categorical_data.loc[i, matched_f2_stance] = 1
@@ -178,11 +179,12 @@ class Processor:
   
                 else:
                     self.categorical_data.loc[i, stance_cols] = 0
-  
+                    self.categorical_data.loc[i, ['f2_stance_Orthodox']] = 1  # give them orthodox stance by default
+
         def match_stance(stance, stance_cols, prefix):
             for col in stance_cols:
                 temp_col = col.replace("_", " ").lower()
-                if stance.lower() in temp_col and prefix in temp_col:
+                if isinstance(stance, str) and stance.lower() in temp_col and prefix in temp_col:
                     return col
 
         def encode_fighters():
