@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fightPredictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
 
 import scrapy
 from scrapy import Selector

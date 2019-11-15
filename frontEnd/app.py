@@ -15,7 +15,7 @@ import json
 external_stylesheets = [
     '//cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.css', dbc.themes.COSMO]
 
-filedir = os.path.join('Fight_Predictor', 'Data',
+filedir = os.path.join('fightPredictor', 'Data',
                        'Scraped_Data', 'scraped_fighters.csv')
 
 fighters = pd.read_csv(filedir)

@@ -1,5 +1,5 @@
 import sys
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor/Scrapers/Fights_scraper/')
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fightPredictor/Scrapers/Fights_scraper/')
 
 
 import scrapy
