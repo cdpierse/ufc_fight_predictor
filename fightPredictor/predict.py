@@ -9,7 +9,7 @@ from processor import ProductionProcessor
 from utils import r2
 
 
-class PreparePredictions:
+class PreparePredictions:           
 
     def __init__(self):
         # the above params are not yet coded.
@@ -24,7 +24,7 @@ class PreparePredictions:
             'fightPredictor', 'Data', 'Scraped_Data', 'scraped_fighters.csv')
         try:
             self.fighters = pd.read_csv(filedir)
-        except:
+        except Exception:
             sys.exit('Unable to read Fighters file from disk. Exiting.')
 
     def set_feature_names(self):

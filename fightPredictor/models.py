@@ -23,7 +23,7 @@ def winner_model():
 
     x_train, y_train = random_data_shuffle(x_train, y_train)
 
-    hidden_units = 80  
+    hidden_units = 80
     epochs = 170
     dropout = 0.65
     l2_reg = tf.keras.regularizers.l2(0.001)
@@ -69,7 +69,7 @@ def fight_stats_model():
     model.add(Dense(hidden1, input_dim=x_train.shape[1], activation='relu',
                     kernel_initializer='normal', kernel_regularizer=l2_reg))
     model.add(Dropout(dropout))
-    model.add(Dense(y_train.shape[1])) # relu here prevents negative output values 
+    model.add(Dense(y_train.shape[1]))  # relu here prevents negative output values
 
     model.compile(
         loss='logcosh',

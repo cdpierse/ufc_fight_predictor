@@ -13,7 +13,7 @@ CORS(app)
 @app.route("/fight-predictor/api/v1.0/predict", methods=['POST'])
 def main():
     print(os.getcwd())
-    base_dir = os.path.join(os.getcwd(),'fightPredictor', 'Files', 'Models')
+    base_dir = os.path.join(os.getcwd(), 'fightPredictor', 'Files', 'Models')
     stats_model = keras.models.load_model(os.path.join(
         base_dir, 'stats_model.h5'), custom_objects={'r2': r2})
     winner_model = keras.models.load_model(os.path.join(
