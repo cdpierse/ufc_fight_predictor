@@ -29,5 +29,6 @@ def main():
     response = f'{str(raw_response[0]), str(float(raw_response[1]))}'
     return response
 
+
 if __name__ == "__main__":
     app.run(debug=False, host='0.0.0.0', port=5000)

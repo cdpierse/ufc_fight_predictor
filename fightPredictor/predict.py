@@ -172,9 +172,9 @@ class Predict:
         abs_probs = []
         for prediction in list(predictions):
             if prediction < 0.50:
-                abs_pred = ('fighter1', 1 - prediction[0])
+                abs_pred = ('fighter1', abs(prediction[0] - 0.5) / 0.5)
             else:
-                abs_pred = ('fighter2', prediction[0])
+                abs_pred = ('fighter2', abs(prediction[0] - 0.5) / 0.5)
 
             abs_probs.append(abs_pred)
 
@@ -188,7 +188,7 @@ if __name__ == "__main__":
     winner_model = keras.models.load_model(os.path.join(
         base_dir, 'winner_model.h5'))
 
-    fight_pair = [('Ben Askren', 'Jorge Masvidal'),
-                  ('Ronda Rousey', 'Conor McGregor')]
+    fight_pair = [('Nick Diaz', 'Nate Diaz'),
+                  ('Stipe Miocic', 'Daniel Cormier')]
     p = Predict(fight_pair, stats_model, winner_model)
     print(p.predictions)
