@@ -9,7 +9,7 @@ from processor import ProductionProcessor
 from utils import r2
 
 
-class PreparePredictions:
+class PreparePredictions:           
 
     def __init__(self):
         # the above params are not yet coded.
@@ -21,14 +21,14 @@ class PreparePredictions:
     def get_fighters(self):
         " Loads the scraped_fighters csv file into a dataframe "
         filedir = os.path.join(
-            'Fight_Predictor', 'Data', 'Scraped_Data', 'scraped_fighters.csv')
+            'fightPredictor', 'Data', 'Scraped_Data', 'scraped_fighters.csv')
         try:
             self.fighters = pd.read_csv(filedir)
-        except:
+        except Exception:
             sys.exit('Unable to read Fighters file from disk. Exiting.')
 
     def set_feature_names(self):
-        base_dir = os.path.join('Fight_Predictor', 'Data',
+        base_dir = os.path.join('fightPredictor', 'Data',
                                 'Processed_Data')
         stats_dir = os.path.join(base_dir, 'Fight_Stats', 'data.npz')
         winner_dir = os.path.join(base_dir, 'Fight_Winner', 'data.npz')
@@ -172,9 +172,9 @@ class Predict:
         abs_probs = []
         for prediction in list(predictions):
             if prediction < 0.50:
-                abs_pred = ('fighter1', 1 - prediction[0])
+                abs_pred = ('fighter1', abs(prediction[0] - 0.5) / 0.5)
             else:
-                abs_pred = ('fighter2', prediction[0])
+                abs_pred = ('fighter2', abs(prediction[0] - 0.5) / 0.5)
 
             abs_probs.append(abs_pred)
 
@@ -182,13 +182,13 @@ class Predict:
 
 
 if __name__ == "__main__":
-    base_dir = os.path.join(os.getcwd(), 'Fight_Predictor', 'Files', 'Models')
+    base_dir = os.path.join(os.getcwd(), 'fightPredictor', 'Files', 'Models')
     stats_model = keras.models.load_model(os.path.join(
         base_dir, 'stats_model.h5'), custom_objects={'r2': r2})
     winner_model = keras.models.load_model(os.path.join(
         base_dir, 'winner_model.h5'))
 
-    fight_pair = [('Ben Askren', 'Jorge Masvidal'),
-                  ('Ronda Rousey', 'Conor McGregor')]
+    fight_pair = [('Nick Diaz', 'Nate Diaz'),
+                  ('Stipe Miocic', 'Daniel Cormier')]
     p = Predict(fight_pair, stats_model, winner_model)
     print(p.predictions)

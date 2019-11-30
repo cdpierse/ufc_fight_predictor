@@ -1,20 +1,24 @@
 import sys
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/Fight_Predictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
 
 import scrapy
 from scrapy import Selector
-from items import BoutsScrapedItem
 from scrapy.crawler import CrawlerProcess
 from scrapy.settings import Settings
 from scrapy.utils.project import get_project_settings
+
 import settings as my_settings
+from items import BoutsScrapedItem
+
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fightPredictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
+
+
 class UFC_Bouts(scrapy.Spider):
-    name = "BoutsSpider" # we use this name to run 'scrapy crawl <name>' in terminal
+    name = "BoutsSpider"  # we use this name to run 'scrapy crawl <name>' in terminal
 
     def start_requests(self):
         start_urls = [
             'http://ufcstats.com/statistics/events/completed?page=all'
-            #'http://ufcstats.com/statistics/events/completed?page=all'
+            # 'http://ufcstats.com/statistics/events/completed?page=all'
         ]
         for url in start_urls:
             yield scrapy.Request(url=url, callback=self.parse)
@@ -25,7 +29,7 @@ class UFC_Bouts(scrapy.Spider):
         for link in fight_links:
             yield scrapy.Request(link, callback=self.parse_bouts)
 
-    def parse_bouts(self,response):
+    def parse_bouts(self, response):
         sel = Selector(response)
         event_name = sel.xpath('//span[@class="b-content__title-highlight"]/text()').extract()[0]
         event_date = sel.xpath('//li[1][@class="b-list__box-list-item"]/text()').extract()[1]
@@ -56,17 +60,9 @@ class UFC_Bouts(scrapy.Spider):
 
             yield bout_item
 
+
 crawler_settings = Settings()
 crawler_settings.setmodule(my_settings)
 process = CrawlerProcess(settings=crawler_settings)
 process.crawl(UFC_Bouts)
 process.start()
-
-
-
-
-
-
-
-
-
