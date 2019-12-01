@@ -1,0 +1,22 @@
+.navbar {
+  float: left;
+  padding: 15px;
+  text-align: center;
+  width: 100%;
+
+
+}
+
+.navbrand {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  font-size: 49px;
+  left: 0;
+
+}
+
+.navbrand  > a{
+  font-size: 1.75em;
+
+}
