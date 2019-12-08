@@ -135,6 +135,7 @@ class Predict:
 
         winner_preds = self.get_predictions(self.fighter_pairs)
         reversed_winner_preds = self.get_predictions(self.reversed_pairs)
+        print(winner_preds)
 
         winner_preds = self.create_abs_probability_array(winner_preds)
         reversed_winner_preds = self.create_abs_probability_array(
@@ -156,7 +157,7 @@ class Predict:
                         (pair2[0], reversed_winner_preds[i][1]))
                 elif winner_preds[i][1] == reversed_winner_preds[i][1]:
                     final_winners_predicted.append(
-                        ((pair1[0], pair2[0]), 'Draw'))
+                        ((pair2[0], pair1[1]), 0.5))
         self.predictions = final_winners_predicted
 
     def get_predictions(self, fighter_pairs):
