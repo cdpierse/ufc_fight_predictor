@@ -9,8 +9,8 @@ from processor import ProductionProcessor
 from utils import r2
 
 
-class PreparePredictions:           
-
+class PreparePredictions:  
+            
     def __init__(self):
         # the above params are not yet coded.
         self.get_fighters()
