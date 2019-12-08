@@ -10,7 +10,7 @@ from scrapy.utils.project import get_project_settings
 import settings as my_settings
 from items import FighterScraperItem
 
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fightPredictor/Scrapers/Fights_scraper/')
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fight_predictor/Scrapers/Fights_scraper/')
 
 
 class UFC_Fighter(scrapy.Spider):

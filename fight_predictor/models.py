@@ -101,7 +101,7 @@ def fight_stats_model():
 
 
 def save(model, save_name):
-    save_loc = os.path.join(os.getcwd(), 'fightPredictor',
+    save_loc = os.path.join(os.getcwd(), 'fight_predictor',
                             'Files', 'Models', save_name)
     model.save(save_loc)
 

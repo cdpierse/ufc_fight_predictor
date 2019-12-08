@@ -10,7 +10,7 @@ from utils import r2
 
 app = Flask(__name__)
 CORS(app)
-BASE_DIR = os.path.join(os.getcwd(), 'fightPredictor', 'Files', 'Models')
+BASE_DIR = os.path.join(os.getcwd(), 'fight_predictor', 'Files', 'Models')
 
 
 @app.route("/fight-predictor/api/v1.0/predict", methods=['GET'])
@@ -31,8 +31,8 @@ def get_prediction():
 
 @app.route("/fight-predictor/api/v1.0/fighters", methods=['GET'])
 def get_fighters():
-    filedir = os.path.join(
-        'fightPredictor', 'Data',
+    filedir = os.path.join(os.getcwd(),
+        'Data',
         'Scraped_Data', 'scraped_fighters.csv')
     fighters = pd.read_csv(filedir)
     fighter_names = list(fighters.fighter_name.unique())

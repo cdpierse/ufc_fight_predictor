@@ -19,7 +19,7 @@ class Processor:
     def __init__(self):
         self.scaler_name = 'win_scaler'
         self.imputer_name = 'win_imputer'
-        self.base_dir = os.path.join(os.getcwd(), "fightPredictor")
+        self.base_dir = os.path.join(os.getcwd(), "fight_predictor")
 
     def read(self):
         filepath = os.path.join(

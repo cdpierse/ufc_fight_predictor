@@ -19,7 +19,7 @@ def random_data_shuffle(x_train, y_train):
 
 
 def get_train_test_data(folder_name):
-    directory = os.path.join('fightPredictor', 'Data',
+    directory = os.path.join('fight_predictor', 'Data',
                              'Processed_Data', folder_name)
     with np.load(os.path.join(directory, 'data.npz')) as data:
         x_train = data['x_train']

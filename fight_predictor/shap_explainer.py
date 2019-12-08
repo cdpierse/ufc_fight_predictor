@@ -9,7 +9,7 @@ from preprocess_data import FightDataPreprocessor
 from utils import get_train_test_data, r2
 from sklearn.externals import joblib
 
-current_dir = os.path.join(os.getcwd(),'fightPredictor')
+current_dir = os.path.join(os.getcwd(),'fight_predictor')
 print('Current Dir is' + current_dir)
 
 #filepath = os.path.join(current_dir,'Saved_Models','Winner_Prediction_Models','bout_winner.h5')
@@ -28,7 +28,7 @@ feature_names = [x.strip()for x in contents]
 #x_train, y_train, x_test, y_test = get_train_test_data('winner_prediction_data')
 x_train, y_train, x_test, y_test = get_train_test_data('fighter_stats_prediction_data')
 
-scaler = joblib.load(os.path.join(os.getcwd(),'fightPredictor','my_scaler.pkl'))
+scaler = joblib.load(os.path.join(os.getcwd(),'fight_predictor','my_scaler.pkl'))
 
 upper_index = 100
 explainer = shap.DeepExplainer(model,x_train)

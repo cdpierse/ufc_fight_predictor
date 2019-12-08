@@ -9,7 +9,7 @@ from scrapy.utils.project import get_project_settings
 import settings as my_settings
 from items import BoutsScrapedItem
 
-sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fightPredictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
+sys.path.append('/Users/charlespierse/PycharmProjects/UFC_Fight_Predictor/fight_predictor/Scrapers/Bouts_Scraper/bouts_scraped/bouts_scraped')
 
 
 class UFC_Bouts(scrapy.Spider):
