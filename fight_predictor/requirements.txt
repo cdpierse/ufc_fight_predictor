@@ -1,0 +1,13 @@
+requests==2.21.0
+dash_html_components==1.0.0
+Flask==1.0.2
+numpy==1.15.4
+shap==0.28.5
+matplotlib==3.0.2
+pandas==0.23.4
+Scrapy==1.6.0
+tensorflow==1.13.1
+Flask_Cors==3.0.7
+joblib==0.13.2
+dash_bootstrap_components==0.7.2
+scikit_learn==0.22

@@ -13,7 +13,7 @@ CORS(app)
 BASE_DIR = os.path.join(os.getcwd(),'fight_predictor','Files', 'Models')
 
 
-@app.route("/fight-predictor/api/v1.0/predict", methods=['GET'])
+@app.route("/api/v1.0/predict", methods=['GET'])
 def get_prediction():
     print(BASE_DIR)
     stats_model = keras.models.load_model(os.path.join(
@@ -33,7 +33,7 @@ def get_prediction():
     return jsonify(response)
 
 
-@app.route("/fight-predictor/api/v1.0/fighters", methods=['GET'])
+@app.route("/api/v1.0/fighters", methods=['GET'])
 def get_fighters():
     filedir = os.path.join(os.getcwd(),
         'fight_predictor','Data',
