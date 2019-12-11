@@ -1,1 +1,0 @@
-gunicorn app: fight_predictor/server
