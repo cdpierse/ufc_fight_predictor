@@ -189,7 +189,6 @@ if __name__ == "__main__":
     winner_model = keras.models.load_model(os.path.join(
         base_dir, 'winner_model.h5'))
 
-    fight_pair = [('Nick Diaz', 'Nate Diaz'),
-                  ('Stipe Miocic', 'Daniel Cormier')]
+    fight_pair = [('Aaron Wetherspoon', 'Nate Diaz')]
     p = Predict(fight_pair, stats_model, winner_model)
     print(p.predictions)

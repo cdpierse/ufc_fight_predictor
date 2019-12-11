@@ -12,7 +12,7 @@ function reducer(state, { field, value }) {
     }
 }
 
-const SelectionGrid = () => {
+const PredictionGrid = () => {
     
     const fighters_url = "http://localhost:5000/fight-predictor/api/v1.0/fighters"
     const predict_url = "http://localhost:5000/fight-predictor/api/v1.0/predict"
@@ -93,7 +93,7 @@ const SelectionGrid = () => {
                 </Input>
             </FormGroup>
             <FormGroup >
-                <Label for="Fighter2" className="mr-sm-2">Fighter2</Label>
+                <Label for="Fighter2" className="mr-sm-2">Fighter 2</Label>
                 <Input type="select"
                     name="fighter2"
                     value={fighter2}
@@ -106,16 +106,16 @@ const SelectionGrid = () => {
                     ))}
                 </Input>
             </FormGroup>
-            <Button onClick = {() => onClick(selectedFighters)}>
+            <Button  className="predictButton" onClick = {() => onClick(selectedFighters)}>
                 Predict
             </Button>
-                    <h1>Winner</h1>
-                    <h1> {winner}</h1>
-                    <h1> Confidence</h1>
-                    <h1> {confidence}</h1>
+                    <h1 className="winner">Winner:</h1>
+                    <h1 className= "winnerResult"> {winner}</h1>
+                    <h1 className="confidence"> Confidence:</h1>
+                    <h1 className= "confidenceResult"> {confidence}</h1>
         </Form>
         
     )
 }
 
-export default SelectionGrid
+export default PredictionGrid

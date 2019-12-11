@@ -1,9 +1,10 @@
 .navbar {
   text-align: center;
   width: 100%;
-
-
+  background-color: black !important;
 }
+
+
 
 .navbrand {
   display: flex;
@@ -18,3 +19,4 @@
   font-size: 1.75em;
 
 }
+
