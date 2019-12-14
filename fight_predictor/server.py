@@ -10,10 +10,10 @@ from utils import r2
 
 app = Flask(__name__)
 CORS(app)
-BASE_DIR = os.path.join(os.getcwd(),'fight_predictor','Files', 'Models')
+BASE_DIR = os.path.join(os.getcwd(),'Files', 'Models')
 
 
-@app.route("/api/v1.0/predict", methods=['GET'])
+@app.route("/api/v1.0/predict", methods=['GET']) 
 def get_prediction():
     print(BASE_DIR)
     stats_model = keras.models.load_model(os.path.join(
@@ -36,11 +36,15 @@ def get_prediction():
 @app.route("/api/v1.0/fighters", methods=['GET'])
 def get_fighters():
     filedir = os.path.join(os.getcwd(),
-        'fight_predictor','Data',
+        'Data',
         'Scraped_Data', 'scraped_fighters.csv')
     fighters = pd.read_csv(filedir)
     fighter_names = list(fighters.fighter_name.unique())
     return jsonify({'fighter_names': fighter_names})
+
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
 
     # code to fetch fighter list
 

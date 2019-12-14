@@ -14,8 +14,8 @@ function reducer(state, { field, value }) {
 
 const PredictionGrid = () => {
     
-    const fighters_url = "http://localhost:5000/fight-predictor/api/v1.0/fighters"
-    const predict_url = "http://localhost:5000/fight-predictor/api/v1.0/predict"
+    const fighters_url = "https://fight-predictor-api.herokuapp.com/api/v1.0/fighters"
+    const predict_url = "https://fight-predictor-api.herokuapp.com/api/v1.0/predict"
     const [fighterNames, setFighterNames] = useState([])
     const [selectedFighters, dispatch] = useReducer(reducer, initialState)
     const [winner, setWinner] =  useState("")
@@ -85,7 +85,7 @@ const PredictionGrid = () => {
                     value={fighter1}
                     onChange={onChange}
                     id="f1Select"
-                    placeholder='select'>
+                    placeholder='Select a fighter'>
                     <option>Select a fighter </option>
                     {fighterNames.map(name => (
                         <option key={name}>{name}</option>
@@ -99,6 +99,7 @@ const PredictionGrid = () => {
                     value={fighter2}
                     onChange={onChange}
                     id="f2Select"
+                    searchable
                     placeholder='select'>
                     <option>Select a fighter </option>
                     {fighterNames.map(name => (

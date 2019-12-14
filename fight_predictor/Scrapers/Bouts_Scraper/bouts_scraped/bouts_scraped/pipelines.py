@@ -10,7 +10,7 @@ import os
 class BoutsScrapedPipeline(object):
     def __init__(self):
         print(os.getcwd())
-        self.file = open(os.path.join(os.getcwd(),"fight_predictor","Data",'Scraped_Data',"scraped_bouts.csv"),'wb')
+        self.file = open(os.path.join(os.getcwd(),"Data",'Scraped_Data',"scraped_bouts.csv"),'wb')
         self.exporter = CsvItemExporter(self.file)
         self.exporter.start_exporting()
 
