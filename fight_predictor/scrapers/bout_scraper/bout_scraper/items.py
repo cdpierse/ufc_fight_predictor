@@ -7,9 +7,8 @@
 
 from scrapy.item import Item, Field
 
-class BoutsScrapedItem(Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
+
+class BoutScraperItem(Item):
     event_name = Field()
     event_date = Field()
     event_attendance = Field()
@@ -26,7 +25,7 @@ class BoutsScrapedItem(Item):
     weight_class = Field()
     win_method_type = Field()
     win_method_finish = Field()
-    round = Field()
+    round_ = Field()
     time = Field()
     winner = Field()
-    pass
+

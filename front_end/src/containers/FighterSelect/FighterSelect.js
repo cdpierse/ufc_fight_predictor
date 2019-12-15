@@ -13,13 +13,13 @@ function reducer(state, { field, value }) {
 }
 
 const PredictionGrid = () => {
-    
+
     const fighters_url = "https://fight-predictor-api.herokuapp.com/api/v1.0/fighters"
     const predict_url = "https://fight-predictor-api.herokuapp.com/api/v1.0/predict"
     const [fighterNames, setFighterNames] = useState([])
     const [selectedFighters, dispatch] = useReducer(reducer, initialState)
-    const [winner, setWinner] =  useState("")
-    const[confidence, setConfidence] = useState("")
+    const [winner, setWinner] = useState("")
+    const [confidence, setConfidence] = useState("")
 
 
     const onChange = (e) => {
@@ -28,30 +28,31 @@ const PredictionGrid = () => {
 
     const makePredictionQuery = (e) => {
         const querystring = require('query-string')
-        const query =  querystring.stringify(e)
+        const query = querystring.stringify(e)
         return query
-        
+
     }
     const onClick = (e) => {
-        console.log(e)
+        setConfidence("")
+        setWinner("")
         if (e.fighter1 && e.fighter2) {
             console.log("Both populated")
             const query = makePredictionQuery(e)
             fetchPrediction(query)
-        } else{
+        } else {
             console.log('Please select 2 fighters')
         }
     }
 
     async function fetchPrediction(query) {
-        const fullQuery = predict_url.concat('?',query)
+        const fullQuery = predict_url.concat('?', query)
         console.log(fullQuery)
-        const res =  await fetch(fullQuery)
+        const res = await fetch(fullQuery)
         res
             .json()
             .then(
                 res => {
-                    setConfidence(res['confidence'])
+                    setConfidence(((Number(res['confidence']) * 100).toFixed(2)).toString() + "%")
                     setWinner(res['winner'])
                 }
             )
@@ -73,7 +74,7 @@ const PredictionGrid = () => {
         fetchFighterData();
     }, []);
 
-    console.log(winner,confidence)
+    console.log(winner, confidence)
 
 
     return (
@@ -107,15 +108,15 @@ const PredictionGrid = () => {
                     ))}
                 </Input>
             </FormGroup>
-            <Button  className="predictButton" onClick = {() => onClick(selectedFighters)}>
+            <Button className="predictButton" onClick={() => onClick(selectedFighters)}>
                 Predict
             </Button>
-                    <h1 className="winner">Winner:</h1>
-                    <h1 className= "winnerResult"> {winner}</h1>
-                    <h1 className="confidence"> Confidence:</h1>
-                    <h1 className= "confidenceResult"> {confidence}</h1>
+            <h1 className="winner">Winner:</h1>
+            <h1 className="winnerResult"> {winner}</h1>
+            <h1 className="confidence"> Confidence:</h1>
+            <h1 className="confidenceResult"> {confidence}  </h1>
         </Form>
-        
+
     )
 }
 

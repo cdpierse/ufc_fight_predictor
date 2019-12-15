@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for bouts_scraped project
+# Scrapy settings for fight_scraper project
 #
 # For simplicity, this file contains only settings considered important or
 # commonly used. You can find more settings consulting the documentation:
@@ -9,16 +9,20 @@
 #     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 
-# BOT_NAME = 'BoutsSpider'
+BOT_NAME = 'fight_scraper'
 
-# SPIDER_MODULES = ['bouts_scraped.spiders']
-# NEWSPIDER_MODULE = 'bouts_scraped.spiders'
+SPIDER_MODULES = ['fight_scraper.spiders']
+NEWSPIDER_MODULE = 'fight_scraper.spiders'
 
-# FEED_FORMAT = 'csv'
-# FEED_URI = 'test.csv'
+
+DOWNLOAD_DELAY = 1.5
+AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_START_DELAY = 2
+AUTOTHROTTLE_TARGET_CONCURRENCY = 6
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
-#USER_AGENT = 'bouts_scraped (+http://www.yourdomain.com)'
+#USER_AGENT = 'fight_scraper (+http://www.yourdomain.com)'
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
@@ -29,7 +33,7 @@ ROBOTSTXT_OBEY = True
 # Configure a delay for requests for the same website (default: 0)
 # See https://doc.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-DOWNLOAD_DELAY = 1.5
+#DOWNLOAD_DELAY = 3
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN = 16
 #CONCURRENT_REQUESTS_PER_IP = 16
@@ -49,13 +53,13 @@ DOWNLOAD_DELAY = 1.5
 # Enable or disable spider middlewares
 # See https://doc.scrapy.org/en/latest/topics/spider-middleware.html
 #SPIDER_MIDDLEWARES = {
-#    'bouts_scraped.middlewares.BoutsScrapedSpiderMiddleware': 543,
+#    'fight_scraper.middlewares.FightScraperSpiderMiddleware': 543,
 #}
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
 #DOWNLOADER_MIDDLEWARES = {
-#    'bouts_scraped.middlewares.BoutsScrapedDownloaderMiddleware': 543,
+#    'fight_scraper.middlewares.FightScraperDownloaderMiddleware': 543,
 #}
 
 # Enable or disable extensions
@@ -67,7 +71,7 @@ DOWNLOAD_DELAY = 1.5
 # Configure item pipelines
 # See https://doc.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'pipelines.BoutsScrapedPipeline': 100,
+   'fight_scraper.pipelines.FightScraperPipeline': 300,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)
