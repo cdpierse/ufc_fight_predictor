@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useReducer } from 'react';
 import { Button, Form, FormGroup, Label, Input } from 'reactstrap';
+import Select from 'react-select';
 
 const initialState = {
     fighter1: '',
@@ -23,7 +24,8 @@ const PredictionGrid = () => {
 
 
     const onChange = (e) => {
-        dispatch({ field: e.target.name, value: e.target.value })
+        console.log(e)
+        dispatch({ field: e.field, value: e.value })
     }
 
     const makePredictionQuery = (e) => {
@@ -63,6 +65,7 @@ const PredictionGrid = () => {
 
     const { fighter1, fighter2 } = selectedFighters
 
+
     async function fetchFighterData() {
         const res = await fetch(fighters_url);
         res
@@ -74,39 +77,60 @@ const PredictionGrid = () => {
         fetchFighterData();
     }, []);
 
-    console.log(winner, confidence)
+    const options1 = fighterNames.map(v => ({
+        label: v,
+        value: v,
+        field: 'fighter1'
+      }));
+    const options2 = fighterNames.map(v => ({
+        label: v,
+        value: v,
+        field: 'fighter2'
 
-
+      }));
+    console.log(selectedFighters)
     return (
         <Form >
             <FormGroup >
                 <Label for="Fighter1" className="mr-sm-2">Fighter 1</Label>
-                <Input type="select"
+                <Select 
+                name = 'fighter1'
+                value= {options1.find(option => option.value === {fighter1})}
+                options={options1}
+                onChange = {onChange} />
+                {/* <select
                     name="fighter1"
                     value={fighter1}
+                    className="form-control selectpicker"
                     onChange={onChange}
                     id="f1Select"
-                    placeholder='Select a fighter'>
-                    <option>Select a fighter </option>
+                    placeholder='Choose Fighter 1' >
+                    <option value="" disabled selected>Select Fighter 1 </option>
                     {fighterNames.map(name => (
                         <option key={name}>{name}</option>
                     ))}
-                </Input>
+                </select> */}
             </FormGroup>
             <FormGroup >
                 <Label for="Fighter2" className="mr-sm-2">Fighter 2</Label>
-                <Input type="select"
+                <Select 
+                name = 'fighter2'
+                value= {options2.find(option => option.value === {fighter2})}
+                options={options2}
+                onChange = {onChange} />
+                {/* <select
                     name="fighter2"
                     value={fighter2}
+                    className="form-control selectpicker"
                     onChange={onChange}
                     id="f2Select"
-                    searchable
-                    placeholder='select'>
-                    <option>Select a fighter </option>
+                    placeholder='Choose Fighter 2' >
+                    <option value="" disabled selected>Select Fighter 2 </option>
                     {fighterNames.map(name => (
                         <option key={name}>{name}</option>
                     ))}
-                </Input>
+                </select> */}
+
             </FormGroup>
             <Button className="predictButton" onClick={() => onClick(selectedFighters)}>
                 Predict

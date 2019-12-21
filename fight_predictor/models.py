@@ -12,9 +12,6 @@ from tensorflow.keras.regularizers import l2
 from utils import r2, random_data_shuffle, get_train_test_data
 
 
-np.random.seed(7)
-
-
 def winner_model():
     """ Model for preidicting overall winner of a bout using static data and predicted bout stats"""
 
@@ -60,26 +57,27 @@ def fight_stats_model():
 
     x_train, y_train = random_data_shuffle(x_train, y_train)
 
-    epochs = 600
+    epochs = 1050           
     hidden1 = 350
     dropout = 0.45
     l2_reg = l2(0.005)
 
     model = tf.keras.models.Sequential()
+    model.add(Dropout(dropout))
     model.add(Dense(hidden1, input_dim=x_train.shape[1], activation='relu',
                     kernel_initializer='normal', kernel_regularizer=l2_reg))
-    model.add(Dropout(dropout))
-    model.add(Dense(y_train.shape[1]))  # relu here prevents negative output values
+
+    model.add(Dense(y_train.shape[1], activation='linear'))  
 
     model.compile(
-        loss='logcosh',
-        optimizer=tf.keras.optimizers.Adam(0.0005),
+        loss='mse',
+        optimizer=tf.keras.optimizers.Adam(0.0001),
         metrics=[r2]
     )
 
     history = model.fit(x_train, y_train,
                         epochs=epochs, batch_size=32,
-                        validation_split=0.05,
+                        validation_split=0.1,
                         shuffle=True
                         )
 
@@ -106,5 +104,5 @@ def save(model, save_name):
     model.save(save_loc)
 
 
-winner_model()
+#winner_model()
 fight_stats_model()

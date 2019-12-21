@@ -71,12 +71,12 @@ class Processor:
                 for col in self.fight_bouts.columns
                 if col in column_names
             ]
+
             return columns_index
 
-        def rearrange_data_to_col_index(col_index1, col_index2, fb_copy=None):
-            self.fight_bouts.iloc[
-                random_winner_index, col_index1
-            ] = self.fight_bouts.iloc[random_winner_index, col_index2].values
+        def rearrange_data_to_col_index(col_index1, col_index2, fb_copy):
+            self.fight_bouts.iloc[random_winner_index, col_index1] = self.fight_bouts.iloc[
+                random_winner_index, col_index2].values
 
             self.fight_bouts.iloc[random_winner_index, col_index2] = fb_copy.iloc[
                 random_winner_index, col_index1
@@ -372,7 +372,7 @@ class StatsProcessor(Processor):
     def split_data(self):
         self.X_train, self.X_test, self.y_train, self.y_test = \
             train_test_split(self.fight_bouts, self.targets.values,
-                             test_size=0.10, random_state=42)
+                             test_size=0.10, random_state=99)
 
     def main(self):
         self.read()
