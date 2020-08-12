@@ -15,7 +15,7 @@
     "react-scripts": "^3.2.0",
     "react-select": "^3.0.8",
     "reactstrap": "^8.2.0",
-    "serialize-javascript": "^2.1.2"
+    "serialize-javascript": "^4.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
