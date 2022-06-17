@@ -4,7 +4,7 @@ numpy==1.15.4
 shap==0.28.5
 matplotlib==3.0.2
 pandas==0.23.4
-Scrapy==1.6.0
+Scrapy==2.6.1
 tensorflow==1.15.2
 Flask_Cors==3.0.7
 joblib==0.13.2
